@@ -65,9 +65,21 @@
                         <!-- Add icons to the links using the .nav-icon class with font-awesome or any other icon font library -->
                         <li class="nav-header">Master</li>
                         <li class="nav-item">
-                            <a href="#" class="nav-link">
-                                <i class="nav-icon fa fa-tasks"></i>
+                            <a href="<?= site_url('kategori/index') ?>" class="nav-link">
+                                <i class="nav-icon fa fa-bars text-warning"></i>
                                 <p class="text">Kategori</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="<?= site_url('satuan/index') ?>" class="nav-link">
+                                <i class="nav-icon fa fa-bars text-warning"></i>
+                                <p class="text">Satuan</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="<?= site_url('barang/index'); ?>" class="nav-link">
+                                <i class="nav-icon fa fa-bars text-warning"></i>
+                                <p class="text">Barang</p>
                             </a>
                         </li>
                     </ul>
@@ -76,7 +88,6 @@
             </div>
             <!-- /.sidebar -->
         </aside>
-
         <!-- Content Wrapper. Contains page content -->
         <div class="content-wrapper">
             <!-- Content Header (Page header) -->
@@ -85,21 +96,20 @@
                     <div class="row mb-2">
                         <div class="col-sm-6">
                             <h1>
-
+                                <?= $this->renderSection('judul'); ?>
                             </h1>
                         </div>
                     </div>
                 </div><!-- /.container-fluid -->
             </section>
-
             <!-- Main content -->
             <section class="content">
-
                 <!-- Default box -->
                 <div class="card">
                     <div class="card-header">
-                        <h3 class="card-title"></h3>
-
+                        <h3 class="card-title">
+                            <?= $this->renderSection('subjudul'); ?>
+                        </h3>
                         <div class="card-tools">
                             <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
                                 <i class="fas fa-minus"></i>
@@ -110,9 +120,9 @@
                         </div>
                     </div>
                     <div class="card-body">
+                        <?= $this->renderSection('isi'); ?>
                     </div>
                     <!-- /.card-body -->
-
                     <!-- /.card-footer-->
                 </div>
                 <!-- /.card -->
