@@ -66,7 +66,7 @@
                         <li class="nav-header">Master</li>
                         <li class="nav-item">
                             <a href="<?= site_url('kategori/index') ?>" class="nav-link">
-                                <i class="nav-icon fa fa-bars text-warning"></i>
+                                <i class="nav-icon fa fa-bars text-danger"></i>
                                 <p class="text">Kategori</p>
                             </a>
                         </li>
@@ -78,7 +78,7 @@
                         </li>
                         <li class="nav-item">
                             <a href="<?= site_url('barang/index'); ?>" class="nav-link">
-                                <i class="nav-icon fa fa-bars text-warning"></i>
+                                <i class="nav-icon fa fa-bars text-success"></i>
                                 <p class="text">Barang</p>
                             </a>
                         </li>

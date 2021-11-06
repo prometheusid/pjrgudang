@@ -11,6 +11,7 @@ Management Data Kategori
 ]) ?>
 <?= $this->endSection('subjudul'); ?>
 <?= $this->section('isi'); ?>
+<?= session()->getFlashdata('sukses'); ?>
 <table class="table-striped table-bordered" style="width: 100%;">
     <thead>
         <tr>
