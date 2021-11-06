@@ -30,3 +30,73 @@ CRITICAL - 2021-11-06 10:27:49 --> syntax error, unexpected ';', expecting ']'
 #6 C:\xampp\htdocs\pjrgudang\public\index.php(37): CodeIgniter\CodeIgniter->run()
 #7 C:\xampp\htdocs\pjrgudang\system\Commands\Server\rewrite.php(43): require_once('C:\\xampp\\htdocs...')
 #8 {main}
+CRITICAL - 2021-11-06 15:29:30 --> Undefined variable: tampildata
+#0 C:\xampp\htdocs\pjrgudang\app\Views\satuan\viewsatuan.php(26): CodeIgniter\Debug\Exceptions->errorHandler(8, 'Undefined varia...', 'C:\\xampp\\htdocs...', 26, Array)
+#1 C:\xampp\htdocs\pjrgudang\system\View\View.php(214): include('C:\\xampp\\htdocs...')
+#2 C:\xampp\htdocs\pjrgudang\system\View\View.php(217): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+#3 C:\xampp\htdocs\pjrgudang\system\Common.php(1092): CodeIgniter\View\View->render('satuan/viewsatu...', Array, true)
+#4 C:\xampp\htdocs\pjrgudang\app\Controllers\Satuan.php(11): view('satuan/viewsatu...')
+#5 C:\xampp\htdocs\pjrgudang\system\CodeIgniter.php(802): App\Controllers\Satuan->index()
+#6 C:\xampp\htdocs\pjrgudang\system\CodeIgniter.php(399): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Satuan))
+#7 C:\xampp\htdocs\pjrgudang\system\CodeIgniter.php(317): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#8 C:\xampp\htdocs\pjrgudang\public\index.php(37): CodeIgniter\CodeIgniter->run()
+#9 C:\xampp\htdocs\pjrgudang\system\Commands\Server\rewrite.php(43): require_once('C:\\xampp\\htdocs...')
+#10 {main}
+CRITICAL - 2021-11-06 15:33:14 --> Undefined variable: tampildata
+#0 C:\xampp\htdocs\pjrgudang\app\Views\satuan\viewsatuan.php(26): CodeIgniter\Debug\Exceptions->errorHandler(8, 'Undefined varia...', 'C:\\xampp\\htdocs...', 26, Array)
+#1 C:\xampp\htdocs\pjrgudang\system\View\View.php(214): include('C:\\xampp\\htdocs...')
+#2 C:\xampp\htdocs\pjrgudang\system\View\View.php(217): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+#3 C:\xampp\htdocs\pjrgudang\system\Common.php(1092): CodeIgniter\View\View->render('satuan/viewsatu...', Array, true)
+#4 C:\xampp\htdocs\pjrgudang\app\Controllers\Satuan.php(11): view('satuan/viewsatu...')
+#5 C:\xampp\htdocs\pjrgudang\system\CodeIgniter.php(802): App\Controllers\Satuan->index()
+#6 C:\xampp\htdocs\pjrgudang\system\CodeIgniter.php(399): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Satuan))
+#7 C:\xampp\htdocs\pjrgudang\system\CodeIgniter.php(317): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#8 C:\xampp\htdocs\pjrgudang\public\index.php(37): CodeIgniter\CodeIgniter->run()
+#9 C:\xampp\htdocs\pjrgudang\system\Commands\Server\rewrite.php(43): require_once('C:\\xampp\\htdocs...')
+#10 {main}
+CRITICAL - 2021-11-06 15:36:15 --> Invalid file: satuan/formtambah.php
+#0 C:\xampp\htdocs\pjrgudang\system\View\View.php(198): CodeIgniter\Exceptions\FrameworkException::forInvalidFile('satuan/formtamb...')
+#1 C:\xampp\htdocs\pjrgudang\system\Common.php(1092): CodeIgniter\View\View->render('satuan/formtamb...', Array, true)
+#2 C:\xampp\htdocs\pjrgudang\app\Controllers\Satuan.php(23): view('satuan/formtamb...')
+#3 C:\xampp\htdocs\pjrgudang\system\CodeIgniter.php(802): App\Controllers\Satuan->formtambah()
+#4 C:\xampp\htdocs\pjrgudang\system\CodeIgniter.php(399): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Satuan))
+#5 C:\xampp\htdocs\pjrgudang\system\CodeIgniter.php(317): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#6 C:\xampp\htdocs\pjrgudang\public\index.php(37): CodeIgniter\CodeIgniter->run()
+#7 C:\xampp\htdocs\pjrgudang\system\Commands\Server\rewrite.php(43): require_once('C:\\xampp\\htdocs...')
+#8 {main}
+ERROR - 2021-11-06 16:06:44 --> Unknown column 'barnama' in 'field list'
+CRITICAL - 2021-11-06 16:06:44 --> Unknown column 'barnama' in 'field list'
+#0 C:\xampp\htdocs\pjrgudang\system\Database\MySQLi\Connection.php(280): mysqli->query('INSERT INTO `ba...')
+#1 C:\xampp\htdocs\pjrgudang\system\Database\BaseConnection.php(663): CodeIgniter\Database\MySQLi\Connection->execute('INSERT INTO `ba...')
+#2 C:\xampp\htdocs\pjrgudang\system\Database\BaseConnection.php(591): CodeIgniter\Database\BaseConnection->simpleQuery('INSERT INTO `ba...')
+#3 C:\xampp\htdocs\pjrgudang\system\Database\BaseBuilder.php(1733): CodeIgniter\Database\BaseConnection->query('INSERT INTO `ba...', Array, false)
+#4 C:\xampp\htdocs\pjrgudang\system\Model.php(239): CodeIgniter\Database\BaseBuilder->insert()
+#5 C:\xampp\htdocs\pjrgudang\system\BaseModel.php(738): CodeIgniter\Model->doInsert(Array)
+#6 C:\xampp\htdocs\pjrgudang\system\Model.php(620): CodeIgniter\BaseModel->insert(Array, true)
+#7 C:\xampp\htdocs\pjrgudang\app\Controllers\Barang.php(49): CodeIgniter\Model->insert(Array)
+#8 C:\xampp\htdocs\pjrgudang\system\CodeIgniter.php(802): App\Controllers\Barang->simpandata()
+#9 C:\xampp\htdocs\pjrgudang\system\CodeIgniter.php(399): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Barang))
+#10 C:\xampp\htdocs\pjrgudang\system\CodeIgniter.php(317): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#11 C:\xampp\htdocs\pjrgudang\public\index.php(37): CodeIgniter\CodeIgniter->run()
+#12 C:\xampp\htdocs\pjrgudang\system\Commands\Server\rewrite.php(43): require_once('C:\\xampp\\htdocs...')
+#13 {main}
+CRITICAL - 2021-11-06 16:14:46 --> There is no data to insert.
+#0 C:\xampp\htdocs\pjrgudang\system\BaseModel.php(718): CodeIgniter\Database\Exceptions\DataException::forEmptyDataset('insert')
+#1 C:\xampp\htdocs\pjrgudang\system\Model.php(620): CodeIgniter\BaseModel->insert(Array, true)
+#2 C:\xampp\htdocs\pjrgudang\app\Controllers\Barang.php(49): CodeIgniter\Model->insert(Array)
+#3 C:\xampp\htdocs\pjrgudang\system\CodeIgniter.php(802): App\Controllers\Barang->simpandata()
+#4 C:\xampp\htdocs\pjrgudang\system\CodeIgniter.php(399): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Barang))
+#5 C:\xampp\htdocs\pjrgudang\system\CodeIgniter.php(317): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#6 C:\xampp\htdocs\pjrgudang\public\index.php(37): CodeIgniter\CodeIgniter->run()
+#7 C:\xampp\htdocs\pjrgudang\system\Commands\Server\rewrite.php(43): require_once('C:\\xampp\\htdocs...')
+#8 {main}
+CRITICAL - 2021-11-06 16:15:06 --> There is no data to insert.
+#0 C:\xampp\htdocs\pjrgudang\system\BaseModel.php(718): CodeIgniter\Database\Exceptions\DataException::forEmptyDataset('insert')
+#1 C:\xampp\htdocs\pjrgudang\system\Model.php(620): CodeIgniter\BaseModel->insert(Array, true)
+#2 C:\xampp\htdocs\pjrgudang\app\Controllers\Barang.php(49): CodeIgniter\Model->insert(Array)
+#3 C:\xampp\htdocs\pjrgudang\system\CodeIgniter.php(802): App\Controllers\Barang->simpandata()
+#4 C:\xampp\htdocs\pjrgudang\system\CodeIgniter.php(399): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Barang))
+#5 C:\xampp\htdocs\pjrgudang\system\CodeIgniter.php(317): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#6 C:\xampp\htdocs\pjrgudang\public\index.php(37): CodeIgniter\CodeIgniter->run()
+#7 C:\xampp\htdocs\pjrgudang\system\Commands\Server\rewrite.php(43): require_once('C:\\xampp\\htdocs...')
+#8 {main}

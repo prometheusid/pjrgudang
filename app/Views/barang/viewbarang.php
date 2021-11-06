@@ -5,9 +5,34 @@ Management Data Barang
 <?= $this->endSection('judul'); ?>
 
 <?= $this->section('subjudul'); ?>
-Data Barang
+<?= form_button('', '<i class="fa fa-plus-circle"></i> Tambah Data', [
+    'class' => 'btn btn-secondary',
+    'onclick' => "location.href=('" . site_url('barang/formtambah') . "')"
+]) ?>
 <?= $this->endSection('subjudul'); ?>
-
 <?= $this->section('isi'); ?>
-Ini Isi Barang
+<?= session()->getFlashdata('sukses'); ?>
+<table class="table-striped table-bordered" style="width: 100%;">
+    <thead>
+        <tr>
+            <th style="width: 5%;">No</th>
+            <th>Nama Barang</th>
+            <th style="width: 15%;">Aksi</th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php
+        $nomor = 1;
+        foreach ($tampildata as $row) :
+        ?>
+            <tr>
+                <td><?= $nomor++; ?></td>
+                <td><?= $row['brgnama']; ?></td>
+                <td>
+
+                </td>
+            </tr>
+        <?php endforeach; ?>
+    </tbody>
+</table>
 <?= $this->endSection('isi'); ?>
