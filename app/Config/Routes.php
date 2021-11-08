@@ -34,6 +34,14 @@ $routes->setAutoRoute(true);
 // $routes->get('/', 'Home::index');
 $routes->get('/', 'Main::index');
 
+//routes untuk kategori
+$routes->get('/kategori/hapus/(:any)', 'Kategori::index');
+$routes->delete('/kategori/hapus/(:any)', 'Kategori::hapus/$1');
+
+//routes untuk barang
+$routes->get('/barang/hapus/(:any)', 'Barang::index');
+$routes->delete('/barang/hapus/(:any)', 'Barang::hapus/$1');
+
 /*
  * --------------------------------------------------------------------
  * Additional Routing

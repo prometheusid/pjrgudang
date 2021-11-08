@@ -29,10 +29,32 @@ Management Data Satuan
                 <td><?= $nomor++; ?></td>
                 <td><?= $row['satnama']; ?></td>
                 <td>
-
+                    <button type="button" class="btn btn-info" title="Edit Data" onclick="edit('<?= $row['satid'] ?>')">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                    <form method="POST" action="/satuan/hapus/<?= $row['satid'] ?>" style="display:inline;" onsubmit="hapus();">
+                        <input type="hidden" value="DELETE" name="_method">
+                        <button type="submit" class="btn btn-danger" title="Hapus Data">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
+                    </form>
                 </td>
             </tr>
         <?php endforeach; ?>
     </tbody>
 </table>
+<script>
+    function edit(id) {
+        window.location = ('/satuan/formedit/' + id);
+    }
+
+    function hapus() {
+        pesan = confirm('Yakin Data Kategori di Hapus ?');
+        if (pesan) {
+            return true;
+        } else {
+            return false;;
+        }
+    }
+</script>
 <?= $this->endSection('isi'); ?>

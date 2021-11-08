@@ -1,0 +1,39 @@
+CRITICAL - 2021-11-07 20:33:03 --> syntax error, unexpected '}'
+#0 C:\xampp\htdocs\pjrgudang\system\Router\Router.php(160): CodeIgniter\Router\Router->autoRoute('kategori/formed...')
+#1 C:\xampp\htdocs\pjrgudang\system\CodeIgniter.php(702): CodeIgniter\Router\Router->handle('kategori/formed...')
+#2 C:\xampp\htdocs\pjrgudang\system\CodeIgniter.php(358): CodeIgniter\CodeIgniter->tryToRouteIt(Object(CodeIgniter\Router\RouteCollection))
+#3 C:\xampp\htdocs\pjrgudang\system\CodeIgniter.php(317): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#4 C:\xampp\htdocs\pjrgudang\public\index.php(37): CodeIgniter\CodeIgniter->run()
+#5 C:\xampp\htdocs\pjrgudang\system\Commands\Server\rewrite.php(43): require_once('C:\\xampp\\htdocs...')
+#6 {main}
+CRITICAL - 2021-11-07 22:14:56 --> Nama Barang is not a valid rule.
+#0 C:\xampp\htdocs\pjrgudang\system\Validation\Validation.php(285): CodeIgniter\Validation\Exceptions\ValidationException::forRuleNotFound('Nama Barang')
+#1 C:\xampp\htdocs\pjrgudang\system\Validation\Validation.php(151): CodeIgniter\Validation\Validation->processRules('namabarang', 'Nama Barang', 'Test Barang 3', Array, Array)
+#2 C:\xampp\htdocs\pjrgudang\system\Controller.php(160): CodeIgniter\Validation\Validation->run()
+#3 C:\xampp\htdocs\pjrgudang\app\Controllers\Barang.php(81): CodeIgniter\Controller->validate(Array)
+#4 C:\xampp\htdocs\pjrgudang\system\CodeIgniter.php(802): App\Controllers\Barang->updatedata()
+#5 C:\xampp\htdocs\pjrgudang\system\CodeIgniter.php(399): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Barang))
+#6 C:\xampp\htdocs\pjrgudang\system\CodeIgniter.php(317): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#7 C:\xampp\htdocs\pjrgudang\public\index.php(37): CodeIgniter\CodeIgniter->run()
+#8 C:\xampp\htdocs\pjrgudang\system\Commands\Server\rewrite.php(43): require_once('C:\\xampp\\htdocs...')
+#9 {main}
+CRITICAL - 2021-11-07 23:00:01 --> Invalid file: satuan/formedit.php
+#0 C:\xampp\htdocs\pjrgudang\system\View\View.php(198): CodeIgniter\Exceptions\FrameworkException::forInvalidFile('satuan/formedit...')
+#1 C:\xampp\htdocs\pjrgudang\system\Common.php(1092): CodeIgniter\View\View->render('satuan/formedit', Array, true)
+#2 C:\xampp\htdocs\pjrgudang\app\Controllers\Satuan.php(68): view('satuan/formedit', Array)
+#3 C:\xampp\htdocs\pjrgudang\system\CodeIgniter.php(802): App\Controllers\Satuan->formedit('1')
+#4 C:\xampp\htdocs\pjrgudang\system\CodeIgniter.php(399): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Satuan))
+#5 C:\xampp\htdocs\pjrgudang\system\CodeIgniter.php(317): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#6 C:\xampp\htdocs\pjrgudang\public\index.php(37): CodeIgniter\CodeIgniter->run()
+#7 C:\xampp\htdocs\pjrgudang\system\Commands\Server\rewrite.php(43): require_once('C:\\xampp\\htdocs...')
+#8 {main}
+CRITICAL - 2021-11-07 23:00:24 --> Invalid file: satuan/formedit.php
+#0 C:\xampp\htdocs\pjrgudang\system\View\View.php(198): CodeIgniter\Exceptions\FrameworkException::forInvalidFile('satuan/formedit...')
+#1 C:\xampp\htdocs\pjrgudang\system\Common.php(1092): CodeIgniter\View\View->render('satuan/formedit', Array, true)
+#2 C:\xampp\htdocs\pjrgudang\app\Controllers\Satuan.php(68): view('satuan/formedit', Array)
+#3 C:\xampp\htdocs\pjrgudang\system\CodeIgniter.php(802): App\Controllers\Satuan->formedit('1')
+#4 C:\xampp\htdocs\pjrgudang\system\CodeIgniter.php(399): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Satuan))
+#5 C:\xampp\htdocs\pjrgudang\system\CodeIgniter.php(317): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#6 C:\xampp\htdocs\pjrgudang\public\index.php(37): CodeIgniter\CodeIgniter->run()
+#7 C:\xampp\htdocs\pjrgudang\system\Commands\Server\rewrite.php(43): require_once('C:\\xampp\\htdocs...')
+#8 {main}
