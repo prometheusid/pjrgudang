@@ -18,6 +18,12 @@ Form Tambah Barang
 
 <!-- Form input data barang -->
 <?= form_open_multipart('barang/simpandata'); ?>
+
+<!-- Alert Jika Terjadi Error (flashdata) -->
+<?= session()->getFlashdata('error'); ?>
+<!-- Alert jika input berhasil -->
+<?= session()->getFlashdata('sukses'); ?>
+
 <div class="form-group row">
     <label for="kodebarang" class="col-sm-3 col-form-label">Kode Barang</label>
     <div class="col-sm-9">
