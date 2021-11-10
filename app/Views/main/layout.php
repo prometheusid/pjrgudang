@@ -82,6 +82,12 @@
                                 <p class="text">Barang</p>
                             </a>
                         </li>
+                        <li class="nav-item">
+                            <a href="<?= site_url('transaksi/index'); ?>" class="nav-link">
+                                <i class="nav-icon fa fa-bars text-info"></i>
+                                <p class="text">Transaksi</p>
+                            </a>
+                        </li>
                     </ul>
                 </nav>
                 <!-- /.sidebar-menu -->
