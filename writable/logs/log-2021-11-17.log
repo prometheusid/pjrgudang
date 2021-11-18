@@ -1,0 +1,75 @@
+CRITICAL - 2021-11-17 21:07:15 --> Undefined variable: gambar
+#0 C:\xampp\htdocs\pjrgudang\app\Views\barang\formedit.php(82): CodeIgniter\Debug\Exceptions->errorHandler(8, 'Undefined varia...', 'C:\\xampp\\htdocs...', 82, Array)
+#1 C:\xampp\htdocs\pjrgudang\system\View\View.php(214): include('C:\\xampp\\htdocs...')
+#2 C:\xampp\htdocs\pjrgudang\system\View\View.php(217): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+#3 C:\xampp\htdocs\pjrgudang\system\Common.php(1092): CodeIgniter\View\View->render('barang/formedit', Array, true)
+#4 C:\xampp\htdocs\pjrgudang\app\Controllers\Barang.php(172): view('barang/formedit', Array)
+#5 C:\xampp\htdocs\pjrgudang\system\CodeIgniter.php(802): App\Controllers\Barang->edit('1212')
+#6 C:\xampp\htdocs\pjrgudang\system\CodeIgniter.php(399): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Barang))
+#7 C:\xampp\htdocs\pjrgudang\system\CodeIgniter.php(317): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#8 C:\xampp\htdocs\pjrgudang\public\index.php(37): CodeIgniter\CodeIgniter->run()
+#9 C:\xampp\htdocs\pjrgudang\system\Commands\Server\rewrite.php(43): require_once('C:\\xampp\\htdocs...')
+#10 {main}
+CRITICAL - 2021-11-17 21:07:29 --> Undefined variable: gambar
+#0 C:\xampp\htdocs\pjrgudang\app\Views\barang\formedit.php(82): CodeIgniter\Debug\Exceptions->errorHandler(8, 'Undefined varia...', 'C:\\xampp\\htdocs...', 82, Array)
+#1 C:\xampp\htdocs\pjrgudang\system\View\View.php(214): include('C:\\xampp\\htdocs...')
+#2 C:\xampp\htdocs\pjrgudang\system\View\View.php(217): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+#3 C:\xampp\htdocs\pjrgudang\system\Common.php(1092): CodeIgniter\View\View->render('barang/formedit', Array, true)
+#4 C:\xampp\htdocs\pjrgudang\app\Controllers\Barang.php(172): view('barang/formedit', Array)
+#5 C:\xampp\htdocs\pjrgudang\system\CodeIgniter.php(802): App\Controllers\Barang->edit('123000')
+#6 C:\xampp\htdocs\pjrgudang\system\CodeIgniter.php(399): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Barang))
+#7 C:\xampp\htdocs\pjrgudang\system\CodeIgniter.php(317): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#8 C:\xampp\htdocs\pjrgudang\public\index.php(37): CodeIgniter\CodeIgniter->run()
+#9 C:\xampp\htdocs\pjrgudang\system\Commands\Server\rewrite.php(43): require_once('C:\\xampp\\htdocs...')
+#10 {main}
+CRITICAL - 2021-11-17 21:08:53 --> Undefined variable: gambar
+#0 C:\xampp\htdocs\pjrgudang\app\Views\barang\formedit.php(82): CodeIgniter\Debug\Exceptions->errorHandler(8, 'Undefined varia...', 'C:\\xampp\\htdocs...', 82, Array)
+#1 C:\xampp\htdocs\pjrgudang\system\View\View.php(214): include('C:\\xampp\\htdocs...')
+#2 C:\xampp\htdocs\pjrgudang\system\View\View.php(217): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+#3 C:\xampp\htdocs\pjrgudang\system\Common.php(1092): CodeIgniter\View\View->render('barang/formedit', Array, true)
+#4 C:\xampp\htdocs\pjrgudang\app\Controllers\Barang.php(172): view('barang/formedit', Array)
+#5 C:\xampp\htdocs\pjrgudang\system\CodeIgniter.php(802): App\Controllers\Barang->edit('1212')
+#6 C:\xampp\htdocs\pjrgudang\system\CodeIgniter.php(399): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Barang))
+#7 C:\xampp\htdocs\pjrgudang\system\CodeIgniter.php(317): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#8 C:\xampp\htdocs\pjrgudang\public\index.php(37): CodeIgniter\CodeIgniter->run()
+#9 C:\xampp\htdocs\pjrgudang\system\Commands\Server\rewrite.php(43): require_once('C:\\xampp\\htdocs...')
+#10 {main}
+CRITICAL - 2021-11-17 21:09:02 --> Undefined variable: gambar
+#0 C:\xampp\htdocs\pjrgudang\app\Views\barang\formedit.php(82): CodeIgniter\Debug\Exceptions->errorHandler(8, 'Undefined varia...', 'C:\\xampp\\htdocs...', 82, Array)
+#1 C:\xampp\htdocs\pjrgudang\system\View\View.php(214): include('C:\\xampp\\htdocs...')
+#2 C:\xampp\htdocs\pjrgudang\system\View\View.php(217): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+#3 C:\xampp\htdocs\pjrgudang\system\Common.php(1092): CodeIgniter\View\View->render('barang/formedit', Array, true)
+#4 C:\xampp\htdocs\pjrgudang\app\Controllers\Barang.php(172): view('barang/formedit', Array)
+#5 C:\xampp\htdocs\pjrgudang\system\CodeIgniter.php(802): App\Controllers\Barang->edit('1212')
+#6 C:\xampp\htdocs\pjrgudang\system\CodeIgniter.php(399): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Barang))
+#7 C:\xampp\htdocs\pjrgudang\system\CodeIgniter.php(317): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#8 C:\xampp\htdocs\pjrgudang\public\index.php(37): CodeIgniter\CodeIgniter->run()
+#9 C:\xampp\htdocs\pjrgudang\system\Commands\Server\rewrite.php(43): require_once('C:\\xampp\\htdocs...')
+#10 {main}
+CRITICAL - 2021-11-17 21:16:08 --> unlink(): Invalid argument
+#0 [internal function]: CodeIgniter\Debug\Exceptions->errorHandler(2, 'unlink(): Inval...', 'C:\\xampp\\htdocs...', 262, Array)
+#1 C:\xampp\htdocs\pjrgudang\app\Controllers\Barang.php(262): unlink('')
+#2 C:\xampp\htdocs\pjrgudang\system\CodeIgniter.php(802): App\Controllers\Barang->updatedata()
+#3 C:\xampp\htdocs\pjrgudang\system\CodeIgniter.php(399): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Barang))
+#4 C:\xampp\htdocs\pjrgudang\system\CodeIgniter.php(317): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#5 C:\xampp\htdocs\pjrgudang\public\index.php(37): CodeIgniter\CodeIgniter->run()
+#6 C:\xampp\htdocs\pjrgudang\system\Commands\Server\rewrite.php(43): require_once('C:\\xampp\\htdocs...')
+#7 {main}
+CRITICAL - 2021-11-17 21:41:17 --> unlink(): Invalid argument
+#0 [internal function]: CodeIgniter\Debug\Exceptions->errorHandler(2, 'unlink(): Inval...', 'C:\\xampp\\htdocs...', 305, Array)
+#1 C:\xampp\htdocs\pjrgudang\app\Controllers\Barang.php(305): unlink('')
+#2 C:\xampp\htdocs\pjrgudang\system\CodeIgniter.php(802): App\Controllers\Barang->hapus('321000')
+#3 C:\xampp\htdocs\pjrgudang\system\CodeIgniter.php(399): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Barang))
+#4 C:\xampp\htdocs\pjrgudang\system\CodeIgniter.php(317): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#5 C:\xampp\htdocs\pjrgudang\public\index.php(37): CodeIgniter\CodeIgniter->run()
+#6 C:\xampp\htdocs\pjrgudang\system\Commands\Server\rewrite.php(43): require_once('C:\\xampp\\htdocs...')
+#7 {main}
+CRITICAL - 2021-11-17 21:44:57 --> unlink(): Invalid argument
+#0 [internal function]: CodeIgniter\Debug\Exceptions->errorHandler(2, 'unlink(): Inval...', 'C:\\xampp\\htdocs...', 305, Array)
+#1 C:\xampp\htdocs\pjrgudang\app\Controllers\Barang.php(305): unlink('')
+#2 C:\xampp\htdocs\pjrgudang\system\CodeIgniter.php(802): App\Controllers\Barang->hapus('11111')
+#3 C:\xampp\htdocs\pjrgudang\system\CodeIgniter.php(399): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Barang))
+#4 C:\xampp\htdocs\pjrgudang\system\CodeIgniter.php(317): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#5 C:\xampp\htdocs\pjrgudang\public\index.php(37): CodeIgniter\CodeIgniter->run()
+#6 C:\xampp\htdocs\pjrgudang\system\Commands\Server\rewrite.php(43): require_once('C:\\xampp\\htdocs...')
+#7 {main}

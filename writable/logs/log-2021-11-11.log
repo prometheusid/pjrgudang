@@ -1,0 +1,8 @@
+CRITICAL - 2021-11-11 12:46:44 --> Call to undefined function CodeIgniter\locale_set_default()
+#0 C:\xampp\htdocs\pjrgudang\system\bootstrap.php(146): CodeIgniter\CodeIgniter->initialize()
+#1 C:\xampp\htdocs\pjrgudang\spark(45): require('C:\\xampp\\htdocs...')
+#2 {main}
+CRITICAL - 2021-11-11 12:48:10 --> Call to undefined function CodeIgniter\locale_set_default()
+#0 C:\xampp\htdocs\pjrgudang\system\bootstrap.php(146): CodeIgniter\CodeIgniter->initialize()
+#1 C:\xampp\htdocs\pjrgudang\spark(45): require('C:\\xampp\\htdocs...')
+#2 {main}

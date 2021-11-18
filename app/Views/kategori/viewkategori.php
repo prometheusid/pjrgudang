@@ -29,12 +29,12 @@ Management Data Kategori
                 <td><?= $nomor++; ?></td>
                 <td><?= $row['katnama']; ?></td>
                 <td>
-                    <button type="button" class="btn btn-info" title="Edit Data" onclick="edit('<?= $row['katid'] ?>')">
+                    <button type="button" class="btn btn-sm btn-info" title="Edit Data" onclick="edit('<?= $row['katid'] ?>')">
                         <i class="fas fa-edit"></i>
                     </button>
                     <form method="POST" action="/kategori/hapus/<?= $row['katid'] ?>" style="display:inline;" onsubmit="hapus();">
                         <input type="hidden" value="DELETE" name="_method">
-                        <button type="submit" class="btn btn-danger" title="Hapus Data">
+                        <button type="submit" class="btn btn-sm btn-danger" title="Hapus Data">
                             <i class="fas fa-trash-alt"></i>
                         </button>
                     </form>

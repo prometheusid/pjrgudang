@@ -15,6 +15,12 @@ Management Data Barang
 
 <!-- Isi Barang -->
 <?= $this->section('isi'); ?>
+
+<!-- Notif Error -->
+<?= session()->getFlashdata('error'); ?>
+<!-- notif berhasil -->
+<?= session()->getFlashdata('sukses'); ?>
+
 <table class="table-striped table-bordered" style="width: 100%;">
     <thead>
         <tr>
@@ -42,10 +48,32 @@ Management Data Barang
                 <td><?= number_format($row['brgharga'], 0); ?></td>
                 <td><?= number_format($row['brgstok'], 0); ?></td>
                 <td>
-
+                    <button type="button" class="btn btn-sm btn-info" title="Edit Data" onclick="edit('<?= $row['brgkode'] ?>')">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                    <form method="POST" action="/barang/hapus/<?= $row['brgkode'] ?>" style="display:inline;" onsubmit="hapus();">
+                        <input type="hidden" value="DELETE" name="_method">
+                        <button type="submit" class="btn btn-sm btn-danger" title="Hapus Data">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
+                    </form>
                 </td>
             </tr>
         <?php endforeach; ?>
     </tbody>
 </table>
+<script>
+    function edit(kode) {
+        window.location = ('/barang/edit/' + kode);
+    }
+
+    function hapus(kode) {
+        pesan = confirm('Yakin Data Barang di Hapus ?');
+        if (pesan) {
+            return true;
+        } else {
+            return false;;
+        }
+    }
+</script>
 <?= $this->endSection('isi'); ?>
