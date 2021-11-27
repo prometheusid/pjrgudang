@@ -14,8 +14,23 @@ class Kategori extends BaseController
 
     public function index()
     {
+        // mengambil input dari searchbox
+        $tombolcari = $this->request->getPost('tombolcari');
+        if (isset($tombolcari)) {
+            $cari = $this->request->getPost('cari');
+            session()->set('cari_kategori', $cari);
+            redirect()->to('/kategori/index');
+        } else {
+            $cari = session()->get('cari_kategori');
+        }
+        $dataKategori = $cari ? $this->kategori->cariData($cari)->paginate(5, 'kategori') : $this->kategori->paginate(5, 'kategori');
+
+        $nohalaman = $this->request->getVar('page_kategori') ? $this->request->getVar('page_kategori') : 1;
         $data = [
-            'tampildata' => $this->kategori->findAll()
+            'tampildata' => $dataKategori,
+            'pager' => $this->kategori->pager,
+            'nohalaman' => $nohalaman,
+            'cari' => $cari
         ];
         return view('kategori/viewkategori', $data);
     }

@@ -1,5 +1,0 @@
-__ci_last_regenerate|i:1637097754;_ci_previous_url|s:34:"http://localhost:8080/barang/index";error|s:291:"<div class="alert alert-danger alert-dismissible">
-                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">x</button>
-                <h5><i class="icon fas fa-ban"></i> Error !</h5>
-                Data Barang Tidak Ditemukan !
-                </div>";__ci_vars|a:1:{s:5:"error";s:3:"old";}
