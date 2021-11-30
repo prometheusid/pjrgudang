@@ -11,4 +11,10 @@ class Modelsatuan extends Model
     protected $allowedFields        = [
         'satid', 'satnama'
     ];
+
+    //searchbox
+    public  function cariData($cari)
+    {
+        return $this->table('satuan')->like('satnama', $cari);
+    }
 }

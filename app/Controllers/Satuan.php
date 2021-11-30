@@ -14,8 +14,23 @@ class Satuan extends BaseController
 
     public function index()
     {
+        //mengambil input dari searchbox
+        $tombolcari = $this->request->getPost('tombolcari');
+        if (isset($tombolcari)) {
+            $cari = $this->request->getPost('cari');
+            session()->set('cari_satuan', $cari);
+            redirect()->to('/satuan/index');
+        } else {
+            $cari = session()->get('cari_satuan');
+        }
+        $dataSatuan = $cari ? $this->satuan->cariData($cari)->paginate(5, 'satuan') : $this->satuan->paginate(5, 'satuan');
+
+        $nohalaman = $this->request->getVar('page_satuan') ? $this->request->getVar('page_satuan') : 1;
         $data = [
-            'tampildata' => $this->satuan->findAll()
+            'tampildata' => $dataSatuan,
+            'pager' => $this->satuan->pager,
+            'nohalaman' => $nohalaman,
+            'cari' => $cari
         ];
         return view('satuan/viewsatuan', $data);
     }

@@ -1,0 +1,16 @@
+ERROR - 2021-11-29 21:50:57 --> Error connecting to the database: No connection could be made because the target machine actively refused it.
+
+CRITICAL - 2021-11-29 21:50:57 --> Unable to connect to the database.
+Main connection [MySQLi]: No connection could be made because the target machine actively refused it.
+
+#0 C:\xampp\htdocs\pjrgudang\system\Database\BaseConnection.php(570): CodeIgniter\Database\BaseConnection->initialize()
+#1 C:\xampp\htdocs\pjrgudang\system\Database\BaseBuilder.php(1428): CodeIgniter\Database\BaseConnection->query('SELECT *\nFROM `...', Array, false)
+#2 C:\xampp\htdocs\pjrgudang\system\Model.php(720): CodeIgniter\Database\BaseBuilder->get()
+#3 C:\xampp\htdocs\pjrgudang\app\Models\Modelbarang.php(18): CodeIgniter\Model->__call('get', Array)
+#4 C:\xampp\htdocs\pjrgudang\app\Controllers\Barang.php(22): App\Models\Modelbarang->tampildata()
+#5 C:\xampp\htdocs\pjrgudang\system\CodeIgniter.php(802): App\Controllers\Barang->index()
+#6 C:\xampp\htdocs\pjrgudang\system\CodeIgniter.php(399): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Barang))
+#7 C:\xampp\htdocs\pjrgudang\system\CodeIgniter.php(317): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#8 C:\xampp\htdocs\pjrgudang\public\index.php(37): CodeIgniter\CodeIgniter->run()
+#9 C:\xampp\htdocs\pjrgudang\system\Commands\Server\rewrite.php(43): require_once('C:\\xampp\\htdocs...')
+#10 {main}

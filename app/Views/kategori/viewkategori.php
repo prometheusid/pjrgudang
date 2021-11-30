@@ -57,9 +57,13 @@ Management Data Kategori
         <?php endforeach; ?>
     </tbody>
 </table>
+
+<!-- pagination -->
 <div class="float-center">
     <?= $pager->links('kategori', 'paging'); ?>
 </div>
+<!-- end pagination -->
+
 <script>
     function edit(id) {
         window.location = ('/kategori/formedit/' + id);

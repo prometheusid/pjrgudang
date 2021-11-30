@@ -12,6 +12,20 @@ Management Data Satuan
 <?= $this->endSection('subjudul'); ?>
 <?= $this->section('isi'); ?>
 <?= session()->getFlashdata('sukses'); ?>
+
+<!-- searchbox -->
+<?= form_open('satuan/index') ?>
+<div class="input-group mb-3">
+    <input type="text" class="form-control" placeholder="Cari Data Satuan" aria-label="Recipient's username" aria-describedby="button-addon2" name="cari" value="<?= $cari; ?>">
+    <div class="input-group-append">
+        <button class="btn btn-outline-primary" type="submit" id="tombolcari" name="tombolcari">
+            <i class="fa fa-search"></i>
+        </button>
+    </div>
+</div>
+<?= form_close(); ?>
+<!-- end seachbox -->
+
 <table class="table-striped table-bordered" style="width: 100%;">
     <thead>
         <tr>
@@ -22,7 +36,7 @@ Management Data Satuan
     </thead>
     <tbody>
         <?php
-        $nomor = 1;
+        $nomor = 1 + (($nohalaman - 1) * 5);
         foreach ($tampildata as $row) :
         ?>
             <tr>
@@ -43,6 +57,13 @@ Management Data Satuan
         <?php endforeach; ?>
     </tbody>
 </table>
+
+<!-- pagination -->
+<div class="float-center">
+    <?= $pager->links('satuan', 'paging'); ?>
+</div>
+<!-- end pagination -->
+
 <script>
     function edit(id) {
         window.location = ('/satuan/formedit/' + id);
