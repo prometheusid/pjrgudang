@@ -59,7 +59,7 @@ Management Data Kategori
 </table>
 
 <!-- pagination -->
-<div class="float-center">
+<div class="float-left mt-1">
     <?= $pager->links('kategori', 'paging'); ?>
 </div>
 <!-- end pagination -->

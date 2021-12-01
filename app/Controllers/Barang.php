@@ -17,9 +17,32 @@ class Barang extends BaseController
 
     public function index()
     {
+        // mengambil input dari searchbox
+        $tombolcari = $this->request->getPost('tombolcari');
+        if (isset($tombolcari)) {
+            $cari = $this->request->getPost('cari');
+            session()->set('cari_barang', $cari);
+            redirect()->to('/barang/index');
+        } else {
+            $cari = session()->get('cari_barang');
+        }
+
+        //menampilkan jumlah data ditemukan
+        $totaldata =
+            $cari ? $this->barang->tampildata_cari($cari)->countAllResults() : $this->barang->tampildata()->countAllResults();
+
+        $dataBarang =
+            $cari ? $this->barang->tampildata_cari($cari)->paginate(5, 'barang') : $this->barang->tampildata()->paginate(5, 'barang');
+
+        $nohalaman = $this->request->getVar('page_barang') ? $this->request->getVar('page_barang') : 1;
+
         //ambil data dari tabel barang dan tampilkan di view barang
         $data = [
-            'tampildata' => $this->barang->tampildata()
+            'tampildata' => $dataBarang,
+            'pager' => $this->barang->pager,
+            'nohalaman' => $nohalaman,
+            'totaldata' => $totaldata,
+            'cari' => $cari
         ];
         return view('barang/viewbarang', $data);
     }

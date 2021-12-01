@@ -21,6 +21,28 @@ Management Data Barang
 <!-- notif berhasil -->
 <?= session()->getFlashdata('sukses'); ?>
 
+<!-- searchbox -->
+<?= form_open('barang/index') ?>
+<div class="input-group mb-3">
+    <input type="text" class="form-control" placeholder="Cari Kode, Nama, Kategori" name="cari" value="<?= $cari; ?>" autofocus>
+    <div class="input-group-append">
+        <button class="btn btn-outline-primary" type="submit" id="tombolcari" name="tombolcari">
+            <i class="fa fa-search"></i>
+        </button>
+    </div>
+</div>
+
+<!-- menammpilkan jumlah data -->
+<span class="badge badge-success mb-2">
+    <h6>
+        Jumlah Data ditemukan = <?= $totaldata; ?>
+    </h6>
+</span>
+<!-- end menampilkan jumlah data -->
+
+<?= form_close(); ?>
+<!-- end seachbox -->
+
 <table class="table-striped table-bordered" style="width: 100%;">
     <thead>
         <tr>
@@ -36,8 +58,8 @@ Management Data Barang
     </thead>
     <tbody>
         <?php
-        $nomor = 1;
-        foreach ($tampildata->getResultArray() as $row) :
+        $nomor = 1 + (($nohalaman - 1) * 5);
+        foreach ($tampildata as $row) :
         ?>
             <tr>
                 <td><?= $nomor++; ?></td>
@@ -62,6 +84,13 @@ Management Data Barang
         <?php endforeach; ?>
     </tbody>
 </table>
+
+<!-- pagination -->
+<div class="float-left mt-1">
+    <?= $pager->links('barang', 'paging'); ?>
+</div>
+<!-- end pagination -->
+
 <script>
     function edit(kode) {
         window.location = ('/barang/edit/' + kode);

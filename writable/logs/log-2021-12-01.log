@@ -1,0 +1,24 @@
+CRITICAL - 2021-12-01 06:03:53 --> Undefined variable: cari
+#0 C:\xampp\htdocs\pjrgudang\app\Views\barang\viewbarang.php(27): CodeIgniter\Debug\Exceptions->errorHandler(8, 'Undefined varia...', 'C:\\xampp\\htdocs...', 27, Array)
+#1 C:\xampp\htdocs\pjrgudang\system\View\View.php(214): include('C:\\xampp\\htdocs...')
+#2 C:\xampp\htdocs\pjrgudang\system\View\View.php(217): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+#3 C:\xampp\htdocs\pjrgudang\system\Common.php(1092): CodeIgniter\View\View->render('barang/viewbara...', Array, true)
+#4 C:\xampp\htdocs\pjrgudang\app\Controllers\Barang.php(24): view('barang/viewbara...', Array)
+#5 C:\xampp\htdocs\pjrgudang\system\CodeIgniter.php(802): App\Controllers\Barang->index()
+#6 C:\xampp\htdocs\pjrgudang\system\CodeIgniter.php(399): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Barang))
+#7 C:\xampp\htdocs\pjrgudang\system\CodeIgniter.php(317): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#8 C:\xampp\htdocs\pjrgudang\public\index.php(37): CodeIgniter\CodeIgniter->run()
+#9 C:\xampp\htdocs\pjrgudang\system\Commands\Server\rewrite.php(43): require_once('C:\\xampp\\htdocs...')
+#10 {main}
+CRITICAL - 2021-12-01 06:41:30 --> Undefined variable: nohalaman
+#0 C:\xampp\htdocs\pjrgudang\app\Views\barang\viewbarang.php(52): CodeIgniter\Debug\Exceptions->errorHandler(8, 'Undefined varia...', 'C:\\xampp\\htdocs...', 52, Array)
+#1 C:\xampp\htdocs\pjrgudang\system\View\View.php(214): include('C:\\xampp\\htdocs...')
+#2 C:\xampp\htdocs\pjrgudang\system\View\View.php(217): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+#3 C:\xampp\htdocs\pjrgudang\system\Common.php(1092): CodeIgniter\View\View->render('barang/viewbara...', Array, true)
+#4 C:\xampp\htdocs\pjrgudang\app\Controllers\Barang.php(37): view('barang/viewbara...', Array)
+#5 C:\xampp\htdocs\pjrgudang\system\CodeIgniter.php(802): App\Controllers\Barang->index()
+#6 C:\xampp\htdocs\pjrgudang\system\CodeIgniter.php(399): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Barang))
+#7 C:\xampp\htdocs\pjrgudang\system\CodeIgniter.php(317): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#8 C:\xampp\htdocs\pjrgudang\public\index.php(37): CodeIgniter\CodeIgniter->run()
+#9 C:\xampp\htdocs\pjrgudang\system\Commands\Server\rewrite.php(43): require_once('C:\\xampp\\htdocs...')
+#10 {main}

@@ -15,6 +15,12 @@ class Modelbarang extends Model
     public function tampildata()
     {
         //join field antar table
-        return $this->table('barang')->join('kategori', 'brgkatid=katid')->join('satuan', 'brgsatid=satid')->get();
+        return $this->table('barang')->join('kategori', 'brgkatid=katid')->join('satuan', 'brgsatid=satid');
+    }
+
+    // tampil data hasil pencarian
+    public function tampildata_cari($cari)
+    {
+        return $this->table('barang')->join('kategori', 'brgkatid=katid')->join('satuan', 'brgsatid=satid')->orlike('brgkode', $cari)->orlike('brgnama', $cari)->orlike('katnama', $cari);
     }
 }
