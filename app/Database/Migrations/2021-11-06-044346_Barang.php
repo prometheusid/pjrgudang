@@ -26,11 +26,17 @@ class Barang extends Migration
                 'unsigned' => true
             ],
             'brgharga' => [
-                'type' => 'double',
+                'type' => 'decimal',
+                'constraint' => '12,2',
             ],
             'brggambar' => [
                 'type' => 'varchar',
-                'constraint' => 200
+                'constraint' => 200,
+                'null' => true,
+            ],
+            'brgstok' => [
+                'type' => 'int',
+                'unsigned' => true,
             ]
         ]);
 

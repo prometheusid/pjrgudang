@@ -2,11 +2,13 @@
 
 namespace App\Controllers;
 
-use App\Controllers\BaseController;
 use App\Models\Modelkategori;
+use CodeIgniter\Exceptions\PageNotFoundException;
 
 class Kategori extends BaseController
 {
+    private $kategori;
+
     public function __construct()
     {
         $this->kategori = new Modelkategori();
@@ -14,25 +16,22 @@ class Kategori extends BaseController
 
     public function index()
     {
-        // mengambil input dari searchbox
-        $tombolcari = $this->request->getPost('tombolcari');
-        if (isset($tombolcari)) {
+        if ($this->request->getMethod() === 'post') {
             $cari = $this->request->getPost('cari');
-            session()->set('cari_kategori', $cari);
-            redirect()->to('/kategori/index');
-        } else {
-            $cari = session()->get('cari_kategori');
+            session()->set('cari_kategori', is_string($cari) ? trim($cari) : '');
+            return redirect()->to(site_url('kategori/index'));
         }
-        $dataKategori = $cari ? $this->kategori->cariData($cari)->paginate(5, 'kategori') : $this->kategori->paginate(5, 'kategori');
 
-        $nohalaman = $this->request->getVar('page_kategori') ? $this->request->getVar('page_kategori') : 1;
-        $data = [
-            'tampildata' => $dataKategori,
+        $cari = (string) session()->get('cari_kategori');
+        $query = $cari === '' ? $this->kategori : $this->kategori->cariData($cari);
+        $data = $query->paginate(5, 'kategori');
+
+        return view('kategori/viewkategori', [
+            'tampildata' => $data,
             'pager' => $this->kategori->pager,
-            'nohalaman' => $nohalaman,
-            'cari' => $cari
-        ];
-        return view('kategori/viewkategori', $data);
+            'nohalaman' => $this->nomorHalaman($this->request->getGet('page_kategori')),
+            'cari' => $cari,
+        ]);
     }
 
     public function formtambah()
@@ -42,101 +41,99 @@ class Kategori extends BaseController
 
     public function simpandata()
     {
-        $namakategori = $this->request->getVar('namakategori');
-        $validation = \Config\Services::validation();
-        $valid = $this->validate([
-            'namakategori' => [
-                'rules' => 'required',
-                'label' => 'Nama Kategori',
-                'errors' => [
-                    'required' => '{field} Wajib di Isi !'
-                ]
-            ]
-        ]);
-        if (!$valid) {
-            $pesan = [
-                'errorNamaKategori' => '<br> <div class="alert alert-danger">' . $validation->getError() . '</div>'
-            ];
-            session()->setFlashdata($pesan);
-            return redirect()->to('kategori/formtambah');
-        } else {
-            $this->kategori->insert([
-                'katnama' => $namakategori
-            ]);
-            $pesan = [
-                'sukses' => '<div class="alert alert-success">Data berhasil di tambahkan </div>'
-            ];
-            session()->setFlashdata($pesan);
-            return redirect()->to('kategori/index');
+        $nama = $this->request->getPost('namakategori');
+        if ($nama !== null && ! is_string($nama)) {
+            session()->setFlashdata('error', 'Nama kategori tidak valid.');
+            return redirect()->to(site_url('kategori/formtambah'));
         }
+        if (is_string($nama) && trim($nama) === '') {
+            session()->setFlashdata('error', 'Nama kategori wajib diisi.');
+            return redirect()->to(site_url('kategori/formtambah'))->withInput();
+        }
+        if (! $this->validate([
+            'namakategori' => 'required|max_length[50]',
+        ])) {
+            session()->setFlashdata('error', implode(' ', $this->validator->getErrors()));
+            return redirect()->to(site_url('kategori/formtambah'))->withInput();
+        }
+
+        $inserted = $this->kategori->insert([
+            'katnama' => trim((string) $this->request->getPost('namakategori')),
+        ]);
+        if ($inserted === false) {
+            session()->setFlashdata('error', 'Kategori gagal disimpan.');
+            return redirect()->to(site_url('kategori/formtambah'))->withInput();
+        }
+        session()->setFlashdata('sukses', 'Kategori berhasil ditambahkan.');
+        return redirect()->to(site_url('kategori/index'));
     }
 
-    public function formedit($id)
+    public function formedit(int $id)
     {
-        $rowData = $this->kategori->find($id);
-
-        if ($rowData) {
-            $data = [
-                'id' => $id,
-                'nama' => $rowData['katnama']
-            ];
-            return view('kategori/formedit', $data);
-        } else {
-            exit('Data Tidak ditemukan');
+        $row = $this->kategori->find($id);
+        if (! $row) {
+            throw PageNotFoundException::forPageNotFound('Kategori tidak ditemukan.');
         }
+
+        return view('kategori/formedit', [
+            'id' => $id,
+            'nama' => $row['katnama'],
+        ]);
     }
 
     public function updatedata()
     {
-        $idkategori = $this->request->getVar('idkategori');
-        $namakategori = $this->request->getVar('namakategori');
-        $validation = \Config\Services::validation();
-        $valid = $this->validate([
-            'namakategori' => [
-                'rules' => 'required',
-                'label' => 'Nama Kategori',
-                'errors' => [
-                    'required' => '{field} Wajib di Isi !'
-                ]
-            ]
-        ]);
-        if (!$valid) {
-            $pesan = [
-                'errorNamaKategori' => '<br> <div class="alert alert-danger">' . $validation->getError() . '</div>'
-            ];
-            session()->setFlashdata($pesan);
-            return redirect()->to('kategori/formedit/' . $idkategori);
-        } else {
-            $this->kategori->update($idkategori, [
-                'katnama' => $namakategori
-            ]);
-            $pesan = [
-                'sukses' => '<div class="alert alert-success alert-dismissible">
-                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">x</button>
-                <h5><i class="icon fas fa-check"></i>Berhasil !</h5> Data Berhasil di Update
-                </div>'
-            ];
-            session()->setFlashdata($pesan);
-            return redirect()->to('kategori/index');
+        $idInput = $this->request->getPost('idkategori');
+        $id = is_scalar($idInput) ? filter_var($idInput, FILTER_VALIDATE_INT) : false;
+        if ($id === false || ! $this->kategori->find($id)) {
+            throw PageNotFoundException::forPageNotFound('Kategori tidak ditemukan.');
         }
+        $nama = $this->request->getPost('namakategori');
+        if ($nama !== null && ! is_string($nama)) {
+            session()->setFlashdata('error', 'Nama kategori tidak valid.');
+            return redirect()->to(site_url('kategori/formedit/' . $id));
+        }
+        if (is_string($nama) && trim($nama) === '') {
+            session()->setFlashdata('error', 'Nama kategori wajib diisi.');
+            return redirect()->to(site_url('kategori/formedit/' . $id))->withInput();
+        }
+        if (! $this->validate(['namakategori' => 'required|max_length[50]'])) {
+            session()->setFlashdata('error', implode(' ', $this->validator->getErrors()));
+            return redirect()->to(site_url('kategori/formedit/' . $id))->withInput();
+        }
+
+        if (! $this->kategori->update($id, [
+            'katnama' => trim((string) $this->request->getPost('namakategori')),
+        ])) {
+            session()->setFlashdata('error', 'Kategori gagal diperbarui.');
+            return redirect()->to(site_url('kategori/formedit/' . $id))->withInput();
+        }
+        session()->setFlashdata('sukses', 'Kategori berhasil diperbarui.');
+        return redirect()->to(site_url('kategori/index'));
     }
 
-    public function hapus($id)
+    public function hapus(int $id)
     {
-        $rowData = $this->kategori->find($id);
-
-        if ($rowData) {
-            $this->kategori->delete($id);
-            $pesan = [
-                'sukses' => '<div class="alert alert-success alert-dismissible">
-                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">x</button>
-                <h5><i class="icon fas fa-check"></i>Berhasil !</h5> Data Berhasil di Hapus
-                </div>'
-            ];
-            session()->setFlashdata($pesan);
-            return redirect()->to('kategori/index');
-        } else {
-            exit('Data Tidak ditemukan');
+        if (! $this->kategori->find($id)) {
+            session()->setFlashdata('error', 'Kategori tidak ditemukan.');
+            return redirect()->to(site_url('kategori/index'));
         }
+        if (db_connect()->table('barang')->where('brgkatid', $id)->countAllResults() > 0) {
+            session()->setFlashdata('error', 'Kategori tidak dapat dihapus karena masih digunakan oleh barang.');
+            return redirect()->to(site_url('kategori/index'));
+        }
+
+        if (! $this->kategori->delete($id)) {
+            session()->setFlashdata('error', 'Kategori gagal dihapus.');
+            return redirect()->to(site_url('kategori/index'));
+        }
+        session()->setFlashdata('sukses', 'Kategori berhasil dihapus.');
+        return redirect()->to(site_url('kategori/index'));
+    }
+
+    private function nomorHalaman($input): int
+    {
+        $halaman = is_scalar($input) ? filter_var($input, FILTER_VALIDATE_INT) : false;
+        return max(1, $halaman === false ? 1 : $halaman);
     }
 }

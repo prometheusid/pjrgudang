@@ -15,6 +15,6 @@ class Modelsatuan extends Model
     //searchbox
     public  function cariData($cari)
     {
-        return $this->table('satuan')->like('satnama', $cari);
+        return $this->like('satnama', $cari);
     }
 }

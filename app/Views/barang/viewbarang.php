@@ -17,14 +17,18 @@ Management Data Barang
 <?= $this->section('isi'); ?>
 
 <!-- Notif Error -->
-<?= session()->getFlashdata('error'); ?>
+<?php if (session()->getFlashdata('error')) : ?>
+    <div class="alert alert-danger" role="alert"><?= esc(session()->getFlashdata('error')) ?></div>
+<?php endif; ?>
 <!-- notif berhasil -->
-<?= session()->getFlashdata('sukses'); ?>
+<?php if (session()->getFlashdata('sukses')) : ?>
+    <div class="alert alert-success" role="alert"><?= esc(session()->getFlashdata('sukses')) ?></div>
+<?php endif; ?>
 
 <!-- searchbox -->
 <?= form_open('barang/index') ?>
 <div class="input-group mb-3">
-    <input type="text" class="form-control" placeholder="Cari Kode, Nama, Kategori" name="cari" value="<?= $cari; ?>" autofocus>
+    <input type="text" class="form-control" placeholder="Cari Kode, Nama, Kategori" name="cari" value="<?= esc($cari, 'attr') ?>" autofocus>
     <div class="input-group-append">
         <button class="btn btn-outline-primary" type="submit" id="tombolcari" name="tombolcari">
             <i class="fa fa-search"></i>
@@ -63,17 +67,18 @@ Management Data Barang
         ?>
             <tr>
                 <td><?= $nomor++; ?></td>
-                <td><?= $row['brgkode']; ?></td>
-                <td><?= $row['brgnama']; ?></td>
-                <td><?= $row['katnama']; ?></td>
-                <td><?= $row['satnama']; ?></td>
+                <td><?= esc($row['brgkode']) ?></td>
+                <td><?= esc($row['brgnama']) ?></td>
+                <td><?= esc($row['katnama']) ?></td>
+                <td><?= esc($row['satnama']) ?></td>
                 <td><?= number_format($row['brgharga'], 0); ?></td>
                 <td><?= number_format($row['brgstok'], 0); ?></td>
                 <td>
-                    <button type="button" class="btn btn-sm btn-info" title="Edit Data" onclick="edit('<?= $row['brgkode'] ?>')">
+                    <a class="btn btn-sm btn-info" title="Edit Data" href="<?= esc(site_url('barang/edit/' . rawurlencode($row['brgkode'])), 'attr') ?>">
                         <i class="fas fa-edit"></i>
-                    </button>
-                    <form method="POST" action="/barang/hapus/<?= $row['brgkode'] ?>" style="display:inline;" onsubmit="hapus();">
+                    </a>
+                    <form method="POST" action="<?= esc(site_url('barang/hapus/' . rawurlencode($row['brgkode'])), 'attr') ?>" style="display:inline;" onsubmit="return confirm('Yakin Data Barang di Hapus ?');">
+                        <?= csrf_field() ?>
                         <input type="hidden" value="DELETE" name="_method">
                         <button type="submit" class="btn btn-sm btn-danger" title="Hapus Data">
                             <i class="fas fa-trash-alt"></i>
@@ -91,18 +96,4 @@ Management Data Barang
 </div>
 <!-- end pagination -->
 
-<script>
-    function edit(kode) {
-        window.location = ('/barang/edit/' + kode);
-    }
-
-    function hapus(kode) {
-        pesan = confirm('Yakin Data Barang di Hapus ?');
-        if (pesan) {
-            return true;
-        } else {
-            return false;;
-        }
-    }
-</script>
 <?= $this->endSection('isi'); ?>

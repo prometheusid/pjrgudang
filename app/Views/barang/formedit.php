@@ -20,20 +20,24 @@ Form Edit Barang
 <?= form_open_multipart('barang/updatedata'); ?>
 
 <!-- Alert Jika Terjadi Error (flashdata) -->
-<?= session()->getFlashdata('error'); ?>
+<?php if (session()->getFlashdata('error')) : ?>
+    <div class="alert alert-danger" role="alert"><?= esc(session()->getFlashdata('error')) ?></div>
+<?php endif; ?>
 <!-- Alert jika input berhasil -->
-<?= session()->getFlashdata('sukses'); ?>
+<?php if (session()->getFlashdata('sukses')) : ?>
+    <div class="alert alert-success" role="alert"><?= esc(session()->getFlashdata('sukses')) ?></div>
+<?php endif; ?>
 
 <div class="form-group row">
     <label for="kodebarang" class="col-sm-3 col-form-label">Kode Barang</label>
     <div class="col-sm-9">
-        <input type="text" class="form-control" id="kodebarang" name="kodebarang" readonly value="<?= $kodebarang; ?>">
+        <input type="text" class="form-control" id="kodebarang" name="kodebarang" readonly value="<?= esc($kodebarang, 'attr') ?>">
     </div>
 </div>
 <div class="form-group row">
     <label for="namabarang" class="col-sm-3 col-form-label">Nama Barang</label>
     <div class="col-sm-9">
-        <input type="text" class="form-control" id="namabarang" name="namabarang" value="<?= $namabarang; ?>">
+        <input type="text" class="form-control" id="namabarang" name="namabarang" maxlength="100" value="<?= esc(old('namabarang', $namabarang), 'attr') ?>">
     </div>
 </div>
 <div class="form-group row">
@@ -42,9 +46,9 @@ Form Edit Barang
         <select class="form-control" name="kategori" id="kategori">
             <?php foreach ($datakategori as $kat) : ?>
                 <?php if ($kat['katid'] == $kategori) : ?>
-                    <option selected value="<?= $kat['katid'] ?>"><?= $kat['katnama'] ?></option>
+                    <option selected value="<?= esc($kat['katid'], 'attr') ?>"><?= esc($kat['katnama']) ?></option>
                 <?php else : ?>
-                    <option value="<?= $kat['katid'] ?>"><?= $kat['katnama'] ?></option>
+                    <option value="<?= esc($kat['katid'], 'attr') ?>"><?= esc($kat['katnama']) ?></option>
                 <?php endif; ?>
             <?php endforeach; ?>
         </select>
@@ -56,9 +60,9 @@ Form Edit Barang
         <select class="form-control" name="satuan" id="satuan">
             <?php foreach ($datasatuan as $sat) : ?>
                 <?php if ($sat['satid'] == $satuan) : ?>
-                    <option selected value="<?= $sat['satid'] ?>"><?= $sat['satnama'] ?></option>
+                    <option selected value="<?= esc($sat['satid'], 'attr') ?>"><?= esc($sat['satnama']) ?></option>
                 <?php else : ?>
-                    <option value="<?= $sat['satid'] ?>"><?= $sat['satnama'] ?></option>
+                    <option value="<?= esc($sat['satid'], 'attr') ?>"><?= esc($sat['satnama']) ?></option>
                 <?php endif; ?>
             <?php endforeach; ?>
         </select>
@@ -67,25 +71,29 @@ Form Edit Barang
 <div class="form-group row">
     <label for="harga" class="col-sm-3 col-form-label">Harga</label>
     <div class="col-sm-4">
-        <input type="number" class="form-control" id="harga" name="harga" value="<?= $harga; ?>">
+        <input type="number" class="form-control" id="harga" name="harga" min="0" step="0.01" value="<?= esc(old('harga', $harga), 'attr') ?>">
     </div>
 </div>
 <div class="form-group row">
     <label for="stok" class="col-sm-3 col-form-label">Stok</label>
     <div class="col-sm-4">
-        <input type="number" class="form-control" id="stok" name="stok" value="<?= $stok; ?>">
+        <input type="number" class="form-control" id="stok" name="stok" min="0" step="1" value="<?= esc($stok, 'attr') ?>" readonly>
     </div>
 </div>
 <div class="form-group row">
     <label for="gambar" class="col-sm-3 col-form-label">Gambar</label>
     <div class="col-sm-4">
-        <img src="<?= base_url() . '/' . $gambar ?>" class="img-thumbnail" style="width: 50%;" alt="Gambar Barang">
+        <?php if ($gambar !== '') : ?>
+            <img src="<?= esc(site_url('barang/gambar/' . rawurlencode($kodebarang)), 'attr') ?>" class="img-thumbnail" style="width: 50%;" alt="Gambar Barang">
+        <?php else : ?>
+            <span>Belum ada gambar.</span>
+        <?php endif; ?>
     </div>
 </div>
 <div class="form-group row">
     <label for="gambar" class="col-sm-3 col-form-label">Upload Gambar Baru (<i> jika ada </i>)</label>
     <div class="col-sm-4">
-        <input type="file" id="gambar" name="gambar">
+        <input type="file" id="gambar" name="gambar" accept=".jpg,.jpeg,.png">
     </div>
 </div>
 <div class="form-group row">

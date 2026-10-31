@@ -15,6 +15,6 @@ class Modelkategori extends Model
     // searchbox
     public function cariData($cari)
     {
-        return $this->table('kategori')->like('katnama', $cari);
+        return $this->like('katnama', $cari);
     }
 }

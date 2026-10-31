@@ -17,14 +17,16 @@ Form Tambah Kategori
 <?= form_open('kategori/simpandata') ?>
 <div class="form-group">
     <label for="namakategori">Nama Kategori</label>
-    <?= form_input('namakategori', '', [
+    <?= form_input('namakategori', old('namakategori'), [
         'class' => 'form-control',
         'id' => 'namakategori',
         'autofocus' => true,
         'placeholder' => 'Isikan Nama Kategori'
     ]) ?>
-    <?= session()->getFlashdata('errorNamaKategori'); ?>
 </div>
+<?php if (session()->getFlashdata('error')) : ?>
+    <div class="alert alert-danger" role="alert"><?= esc(session()->getFlashdata('error')) ?></div>
+<?php endif; ?>
 <div class="form-group">
     <?= form_submit('', 'Simpan', [
         'class' => 'btn btn-success'

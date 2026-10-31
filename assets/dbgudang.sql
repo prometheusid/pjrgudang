@@ -32,9 +32,9 @@ CREATE TABLE `barang` (
   `brgnama` varchar(100) NOT NULL,
   `brgkatid` int(10) UNSIGNED NOT NULL,
   `brgsatid` int(10) UNSIGNED NOT NULL,
-  `brgharga` double NOT NULL,
+  `brgharga` decimal(12,2) NOT NULL,
   `brggambar` varchar(200) DEFAULT NULL,
-  `brgstok` int(11) NOT NULL
+  `brgstok` int(10) UNSIGNED NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --

@@ -2,11 +2,13 @@
 
 namespace App\Controllers;
 
-use App\Controllers\BaseController;
 use App\Models\Modelsatuan;
+use CodeIgniter\Exceptions\PageNotFoundException;
 
 class Satuan extends BaseController
 {
+    private $satuan;
+
     public function __construct()
     {
         $this->satuan = new Modelsatuan();
@@ -14,25 +16,22 @@ class Satuan extends BaseController
 
     public function index()
     {
-        //mengambil input dari searchbox
-        $tombolcari = $this->request->getPost('tombolcari');
-        if (isset($tombolcari)) {
+        if ($this->request->getMethod() === 'post') {
             $cari = $this->request->getPost('cari');
-            session()->set('cari_satuan', $cari);
-            redirect()->to('/satuan/index');
-        } else {
-            $cari = session()->get('cari_satuan');
+            session()->set('cari_satuan', is_string($cari) ? trim($cari) : '');
+            return redirect()->to(site_url('satuan/index'));
         }
-        $dataSatuan = $cari ? $this->satuan->cariData($cari)->paginate(5, 'satuan') : $this->satuan->paginate(5, 'satuan');
 
-        $nohalaman = $this->request->getVar('page_satuan') ? $this->request->getVar('page_satuan') : 1;
-        $data = [
-            'tampildata' => $dataSatuan,
+        $cari = (string) session()->get('cari_satuan');
+        $query = $cari === '' ? $this->satuan : $this->satuan->cariData($cari);
+        $data = $query->paginate(5, 'satuan');
+
+        return view('satuan/viewsatuan', [
+            'tampildata' => $data,
             'pager' => $this->satuan->pager,
-            'nohalaman' => $nohalaman,
-            'cari' => $cari
-        ];
-        return view('satuan/viewsatuan', $data);
+            'nohalaman' => $this->nomorHalaman($this->request->getGet('page_satuan')),
+            'cari' => $cari,
+        ]);
     }
 
     public function formtambah()
@@ -42,101 +41,99 @@ class Satuan extends BaseController
 
     public function simpandata()
     {
-        $namasatuan = $this->request->getVar('namasatuan');
-        $validation = \Config\Services::validation();
-        $valid = $this->validate([
-            'namasatuan' => [
-                'rules' => 'required',
-                'label' => 'Nama Satuan',
-                'errors' => [
-                    'required' => '{field} Wajib di Isi !'
-                ]
-            ]
-        ]);
-        if (!$valid) {
-            $pesan = [
-                'errorNamaSatuan' => '<br> <div class="alert alert-danger">' . $validation->getError() . '</div>'
-            ];
-            session()->setFlashdata($pesan);
-            return redirect()->to('satuan/formtambah');
-        } else {
-            $this->satuan->insert([
-                'satnama' => $namasatuan
-            ]);
-            $pesan = [
-                'sukses' => '<div class="alert alert-success">Data berhasil di tambahkan </div>'
-            ];
-            session()->setFlashdata($pesan);
-            return redirect()->to('satuan/index');
+        $nama = $this->request->getPost('namasatuan');
+        if ($nama !== null && ! is_string($nama)) {
+            session()->setFlashdata('error', 'Nama satuan tidak valid.');
+            return redirect()->to(site_url('satuan/formtambah'));
         }
+        if (is_string($nama) && trim($nama) === '') {
+            session()->setFlashdata('error', 'Nama satuan wajib diisi.');
+            return redirect()->to(site_url('satuan/formtambah'))->withInput();
+        }
+        if (! $this->validate([
+            'namasatuan' => 'required|max_length[50]',
+        ])) {
+            session()->setFlashdata('error', implode(' ', $this->validator->getErrors()));
+            return redirect()->to(site_url('satuan/formtambah'))->withInput();
+        }
+
+        $inserted = $this->satuan->insert([
+            'satnama' => trim((string) $this->request->getPost('namasatuan')),
+        ]);
+        if ($inserted === false) {
+            session()->setFlashdata('error', 'Satuan gagal disimpan.');
+            return redirect()->to(site_url('satuan/formtambah'))->withInput();
+        }
+        session()->setFlashdata('sukses', 'Satuan berhasil ditambahkan.');
+        return redirect()->to(site_url('satuan/index'));
     }
 
-    public function formedit($id)
+    public function formedit(int $id)
     {
-        $rowData = $this->satuan->find($id);
-
-        if ($rowData) {
-            $data = [
-                'id' => $id,
-                'nama' => $rowData['satnama']
-            ];
-            return view('satuan/formedit', $data);
-        } else {
-            exit('Data Tidak ditemukan');
+        $row = $this->satuan->find($id);
+        if (! $row) {
+            throw PageNotFoundException::forPageNotFound('Satuan tidak ditemukan.');
         }
+
+        return view('satuan/formedit', [
+            'id' => $id,
+            'nama' => $row['satnama'],
+        ]);
     }
 
     public function updatedata()
     {
-        $idsatuan = $this->request->getVar('idsatuan');
-        $namasatuan = $this->request->getVar('namasatuan');
-        $validation = \Config\Services::validation();
-        $valid = $this->validate([
-            'namasatuan' => [
-                'rules' => 'required',
-                'label' => 'Nama Satuan',
-                'errors' => [
-                    'required' => '{field} Wajib di Isi !'
-                ]
-            ]
-        ]);
-        if (!$valid) {
-            $pesan = [
-                'errorNamaSatuan' => '<br> <div class="alert alert-danger">' . $validation->getError() . '</div>'
-            ];
-            session()->setFlashdata($pesan);
-            return redirect()->to('satuan/formedit/' . $idsatuan);
-        } else {
-            $this->satuan->update($idsatuan, [
-                'satnama' => $namasatuan
-            ]);
-            $pesan = [
-                'sukses' => '<div class="alert alert-success alert-dismissible">
-                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">x</button>
-                <h5><i class="icon fas fa-check"></i>Berhasil !</h5> Data Berhasil di Update
-                </div>'
-            ];
-            session()->setFlashdata($pesan);
-            return redirect()->to('satuan/index');
+        $idInput = $this->request->getPost('idsatuan');
+        $id = is_scalar($idInput) ? filter_var($idInput, FILTER_VALIDATE_INT) : false;
+        if ($id === false || ! $this->satuan->find($id)) {
+            throw PageNotFoundException::forPageNotFound('Satuan tidak ditemukan.');
         }
+        $nama = $this->request->getPost('namasatuan');
+        if ($nama !== null && ! is_string($nama)) {
+            session()->setFlashdata('error', 'Nama satuan tidak valid.');
+            return redirect()->to(site_url('satuan/formedit/' . $id));
+        }
+        if (is_string($nama) && trim($nama) === '') {
+            session()->setFlashdata('error', 'Nama satuan wajib diisi.');
+            return redirect()->to(site_url('satuan/formedit/' . $id))->withInput();
+        }
+        if (! $this->validate(['namasatuan' => 'required|max_length[50]'])) {
+            session()->setFlashdata('error', implode(' ', $this->validator->getErrors()));
+            return redirect()->to(site_url('satuan/formedit/' . $id))->withInput();
+        }
+
+        if (! $this->satuan->update($id, [
+            'satnama' => trim((string) $this->request->getPost('namasatuan')),
+        ])) {
+            session()->setFlashdata('error', 'Satuan gagal diperbarui.');
+            return redirect()->to(site_url('satuan/formedit/' . $id))->withInput();
+        }
+        session()->setFlashdata('sukses', 'Satuan berhasil diperbarui.');
+        return redirect()->to(site_url('satuan/index'));
     }
 
-    public function hapus($id)
+    public function hapus(int $id)
     {
-        $rowData = $this->satuan->find($id);
-
-        if ($rowData) {
-            $this->satuan->delete($id);
-            $pesan = [
-                'sukses' => '<div class="alert alert-success alert-dismissible">
-                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">x</button>
-                <h5><i class="icon fas fa-check"></i>Berhasil !</h5> Data Berhasil di Hapus
-                </div>'
-            ];
-            session()->setFlashdata($pesan);
-            return redirect()->to('satuan/index');
-        } else {
-            exit('Data Tidak ditemukan');
+        if (! $this->satuan->find($id)) {
+            session()->setFlashdata('error', 'Satuan tidak ditemukan.');
+            return redirect()->to(site_url('satuan/index'));
         }
+        if (db_connect()->table('barang')->where('brgsatid', $id)->countAllResults() > 0) {
+            session()->setFlashdata('error', 'Satuan tidak dapat dihapus karena masih digunakan oleh barang.');
+            return redirect()->to(site_url('satuan/index'));
+        }
+
+        if (! $this->satuan->delete($id)) {
+            session()->setFlashdata('error', 'Satuan gagal dihapus.');
+            return redirect()->to(site_url('satuan/index'));
+        }
+        session()->setFlashdata('sukses', 'Satuan berhasil dihapus.');
+        return redirect()->to(site_url('satuan/index'));
+    }
+
+    private function nomorHalaman($input): int
+    {
+        $halaman = is_scalar($input) ? filter_var($input, FILTER_VALIDATE_INT) : false;
+        return max(1, $halaman === false ? 1 : $halaman);
     }
 }

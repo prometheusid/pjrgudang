@@ -21,7 +21,7 @@ $routes->setDefaultController('Home');
 $routes->setDefaultMethod('index');
 $routes->setTranslateURIDashes(false);
 $routes->set404Override();
-$routes->setAutoRoute(true);
+$routes->setAutoRoute(false);
 
 /*
  * --------------------------------------------------------------------
@@ -31,16 +31,42 @@ $routes->setAutoRoute(true);
 
 // We get a performance increase by specifying the default
 // route since we don't have to scan directories.
-// $routes->get('/', 'Home::index');
-$routes->get('/', 'Main::index');
+$routes->get('login', 'Auth::login');
+$routes->post('login', 'Auth::attempt');
+$routes->post('logout', 'Auth::logout');
 
-//routes untuk kategori
-$routes->get('/kategori/hapus/(:any)', 'Kategori::index');
-$routes->delete('/kategori/hapus/(:any)', 'Kategori::hapus/$1');
+$routes->group('', ['filter' => 'auth'], static function ($routes) {
+    $routes->get('/', 'Main::index');
 
-//routes untuk barang
-$routes->get('/barang/hapus/(:any)', 'Barang::index');
-$routes->delete('/barang/hapus/(:any)', 'Barang::hapus/$1');
+    $routes->get('kategori', 'Kategori::index');
+    $routes->match(['get', 'post'], 'kategori/index', 'Kategori::index');
+    $routes->get('kategori/formtambah', 'Kategori::formtambah');
+    $routes->post('kategori/simpandata', 'Kategori::simpandata');
+    $routes->get('kategori/formedit/(:num)', 'Kategori::formedit/$1');
+    $routes->post('kategori/updatedata', 'Kategori::updatedata');
+    $routes->delete('kategori/hapus/(:num)', 'Kategori::hapus/$1');
+
+    $routes->get('satuan', 'Satuan::index');
+    $routes->match(['get', 'post'], 'satuan/index', 'Satuan::index');
+    $routes->get('satuan/formtambah', 'Satuan::formtambah');
+    $routes->post('satuan/simpandata', 'Satuan::simpandata');
+    $routes->get('satuan/formedit/(:num)', 'Satuan::formedit/$1');
+    $routes->post('satuan/updatedata', 'Satuan::updatedata');
+    $routes->delete('satuan/hapus/(:num)', 'Satuan::hapus/$1');
+
+    $routes->get('barang', 'Barang::index');
+    $routes->match(['get', 'post'], 'barang/index', 'Barang::index');
+    $routes->get('barang/tambah', 'Barang::tambah');
+    $routes->post('barang/simpandata', 'Barang::simpandata');
+    $routes->get('barang/edit/(:segment)', 'Barang::edit/$1');
+    $routes->post('barang/updatedata', 'Barang::updatedata');
+    $routes->delete('barang/hapus/(:segment)', 'Barang::hapus/$1');
+    $routes->get('barang/gambar/(:segment)', 'Barang::gambar/$1');
+
+    $routes->get('transaksi', 'Transaksi::index');
+    $routes->get('transaksi/index', 'Transaksi::index');
+    $routes->post('transaksi/simpan', 'Transaksi::simpan');
+});
 
 /*
  * --------------------------------------------------------------------

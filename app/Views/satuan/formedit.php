@@ -19,13 +19,15 @@ Form Edit Satuan
 ]) ?>
 <div class="form-group">
     <label for="namasatuan">Nama Satuan</label>
-    <?= form_input('namasatuan', $nama, [
+    <?= form_input('namasatuan', old('namasatuan', $nama), [
         'class' => 'form-control',
         'id' => 'namasatuan',
         'autofocus' => true,
     ]) ?>
-    <?= session()->getFlashdata('errorNamaSatuan'); ?>
 </div>
+<?php if (session()->getFlashdata('error')) : ?>
+    <div class="alert alert-danger" role="alert"><?= esc(session()->getFlashdata('error')) ?></div>
+<?php endif; ?>
 <div class="form-group">
     <?= form_submit('', 'Simpan', [
         'class' => 'btn btn-success'

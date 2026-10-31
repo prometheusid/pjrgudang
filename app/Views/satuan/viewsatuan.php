@@ -11,12 +11,17 @@ Management Data Satuan
 ]) ?>
 <?= $this->endSection('subjudul'); ?>
 <?= $this->section('isi'); ?>
-<?= session()->getFlashdata('sukses'); ?>
+<?php if (session()->getFlashdata('error')) : ?>
+    <div class="alert alert-danger" role="alert"><?= esc(session()->getFlashdata('error')) ?></div>
+<?php endif; ?>
+<?php if (session()->getFlashdata('sukses')) : ?>
+    <div class="alert alert-success" role="alert"><?= esc(session()->getFlashdata('sukses')) ?></div>
+<?php endif; ?>
 
 <!-- searchbox -->
 <?= form_open('satuan/index') ?>
 <div class="input-group mb-3">
-    <input type="text" class="form-control" placeholder="Cari Data Satuan" aria-label="Recipient's username" aria-describedby="button-addon2" name="cari" value="<?= $cari; ?>">
+    <input type="text" class="form-control" placeholder="Cari Data Satuan" aria-label="Recipient's username" aria-describedby="button-addon2" name="cari" value="<?= esc($cari, 'attr') ?>">
     <div class="input-group-append">
         <button class="btn btn-outline-primary" type="submit" id="tombolcari" name="tombolcari">
             <i class="fa fa-search"></i>
@@ -41,12 +46,13 @@ Management Data Satuan
         ?>
             <tr>
                 <td><?= $nomor++; ?></td>
-                <td><?= $row['satnama']; ?></td>
+                <td><?= esc($row['satnama']) ?></td>
                 <td>
-                    <button type="button" class="btn btn-sm btn-info" title="Edit Data" onclick="edit('<?= $row['satid'] ?>')">
+                    <a class="btn btn-sm btn-info" title="Edit Data" href="<?= esc(site_url('satuan/formedit/' . $row['satid']), 'attr') ?>">
                         <i class="fas fa-edit"></i>
-                    </button>
-                    <form method="POST" action="/satuan/hapus/<?= $row['satid'] ?>" style="display:inline;" onsubmit="hapus();">
+                    </a>
+                    <form method="POST" action="<?= esc(site_url('satuan/hapus/' . $row['satid']), 'attr') ?>" style="display:inline;" onsubmit="return confirm('Yakin Data Satuan di Hapus ?');">
+                        <?= csrf_field() ?>
                         <input type="hidden" value="DELETE" name="_method">
                         <button type="submit" class="btn btn-sm btn-danger" title="Hapus Data">
                             <i class="fas fa-trash-alt"></i>
@@ -64,18 +70,4 @@ Management Data Satuan
 </div>
 <!-- end pagination -->
 
-<script>
-    function edit(id) {
-        window.location = ('/satuan/formedit/' + id);
-    }
-
-    function hapus() {
-        pesan = confirm('Yakin Data Kategori di Hapus ?');
-        if (pesan) {
-            return true;
-        } else {
-            return false;;
-        }
-    }
-</script>
 <?= $this->endSection('isi'); ?>

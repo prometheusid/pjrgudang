@@ -17,14 +17,16 @@ Form Tambah Satuan
 <?= form_open('satuan/simpandata') ?>
 <div class="form-group">
     <label for="namasatuan">Nama Satuan</label>
-    <?= form_input('namasatuan', '', [
+    <?= form_input('namasatuan', old('namasatuan'), [
         'class' => 'form-control',
         'id' => 'namasatuan',
         'autofocus' => true,
         'placeholder' => 'Isikan Nama Satuan'
     ]) ?>
-    <?= session()->getFlashdata('errorNamaSatuan'); ?>
 </div>
+<?php if (session()->getFlashdata('error')) : ?>
+    <div class="alert alert-danger" role="alert"><?= esc(session()->getFlashdata('error')) ?></div>
+<?php endif; ?>
 <div class="form-group">
     <?= form_submit('', 'Simpan', [
         'class' => 'btn btn-success'

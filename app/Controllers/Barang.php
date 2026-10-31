@@ -2,14 +2,16 @@
 
 namespace App\Controllers;
 
-use App\Controllers\BaseController;
 use App\Models\Modelbarang;
 use App\Models\Modelkategori;
 use App\Models\Modelsatuan;
+use CodeIgniter\Exceptions\PageNotFoundException;
+use CodeIgniter\HTTP\Files\UploadedFile;
 
 class Barang extends BaseController
 {
-    //load mmodel barang
+    private $barang;
+
     public function __construct()
     {
         $this->barang = new Modelbarang();
@@ -17,336 +19,300 @@ class Barang extends BaseController
 
     public function index()
     {
-        // mengambil input dari searchbox
-        $tombolcari = $this->request->getPost('tombolcari');
-        if (isset($tombolcari)) {
-            $cari = $this->request->getPost('cari');
+        if ($this->request->getMethod() === 'post') {
+            $inputCari = $this->request->getPost('cari');
+            $cari = is_string($inputCari) ? trim($inputCari) : '';
             session()->set('cari_barang', $cari);
-            redirect()->to('/barang/index');
-        } else {
-            $cari = session()->get('cari_barang');
+            return redirect()->to(site_url('barang/index'));
         }
 
-        //menampilkan jumlah data ditemukan
-        $totaldata =
-            $cari ? $this->barang->tampildata_cari($cari)->countAllResults() : $this->barang->tampildata()->countAllResults();
+        $cari = (string) session()->get('cari_barang');
+        $countModel = new Modelbarang();
+        $totalData = $cari === ''
+            ? $countModel->tampildata()->countAllResults()
+            : $countModel->tampildata_cari($cari)->countAllResults();
+        $dataBarang = $cari === ''
+            ? $this->barang->tampildata()->paginate(5, 'barang')
+            : $this->barang->tampildata_cari($cari)->paginate(5, 'barang');
 
-        $dataBarang =
-            $cari ? $this->barang->tampildata_cari($cari)->paginate(5, 'barang') : $this->barang->tampildata()->paginate(5, 'barang');
-
-        $nohalaman = $this->request->getVar('page_barang') ? $this->request->getVar('page_barang') : 1;
-
-        //ambil data dari tabel barang dan tampilkan di view barang
-        $data = [
+        return view('barang/viewbarang', [
             'tampildata' => $dataBarang,
             'pager' => $this->barang->pager,
-            'nohalaman' => $nohalaman,
-            'totaldata' => $totaldata,
-            'cari' => $cari
-        ];
-        return view('barang/viewbarang', $data);
+            'nohalaman' => $this->nomorHalaman($this->request->getGet('page_barang')),
+            'totaldata' => $totalData,
+            'cari' => $cari,
+        ]);
     }
 
-    //function tambah data
     public function tambah()
     {
-        //load isi kategori dan satuan
-        $modelkategori = new Modelkategori();
-        $modelsatuan = new Modelsatuan();
-        //kirim data hasil load ke form select
-        $data = [
-            'datakategori' => $modelkategori->findAll(),
-            'datasatuan' => $modelsatuan->findAll()
-        ];
-        return view('barang/formtambah', $data);
+        return view('barang/formtambah', $this->dataPilihan());
     }
 
-    //function simpan data dari form input ke database
     public function simpandata()
     {
-        $kodebarang = $this->request->getVar('kodebarang');
-        $namabarang = $this->request->getVar('namabarang');
-        $kategori = $this->request->getVar('kategori');
-        $satuan = $this->request->getVar('satuan');
-        $harga = $this->request->getVar('harga');
-        $stok = $this->request->getVar('stok');
+        $file = $this->request->getFile('gambar');
+        if (! $this->validasiBarang(true, $file)) {
+            return redirect()->to(site_url('barang/tambah'))->withInput();
+        }
+        $nama = trim((string) $this->request->getPost('namabarang'));
+        if ($nama === '') {
+            session()->setFlashdata('error', 'Nama barang wajib diisi.');
+            return redirect()->to(site_url('barang/tambah'))->withInput();
+        }
 
-        //validasi data input
-        $validation = \Config\Services::validation();
-        $valid = $this->validate([
-            'kodebarang' => [
-                'rules' => 'required|is_unique[barang.brgkode]',
-                'label' => 'Kode Barang',
-                'errors' => [
-                    'required' => '{field} tidak boleh kosong.',
-                    'is_unique' => '{field} sudah ada.'
-                ]
-            ],
-            'namabarang' => [
-                'rules' => 'required',
-                'label' => 'Nama Barang',
-                'errors' => [
-                    'required' => '{field} tidak boleh kosong.'
-                ]
-            ],
-            'kategori' => [
-                'rules' => 'required',
-                'label' => 'Kategori',
-                'errors' => [
-                    'required' => '{field} tidak boleh kosong.'
-                ]
-            ],
-            'satuan' => [
-                'rules' => 'required',
-                'label' => 'Satuan',
-                'errors' => [
-                    'required' => '{field} tidak boleh kosong.'
-                ]
-            ],
-            'harga' => [
-                'rules' => 'required|numeric',
-                'label' => 'Harga',
-                'errors' => [
-                    'required' => '{field} tidak boleh kosong.',
-                    'numeric' => '{field} hanya boleh angka'
-                ]
-            ],
-            'stok' => [
-                'rules' => 'required|numeric',
-                'label' => 'Stok',
-                'errors' => [
-                    'required' => '{field} tidak boleh kosong.',
-                    'numeric' => '{field} hanya boleh angka'
-                ]
-            ],
-            'gambar' => [
-                'rules' => 'mime_in[gambar,image/png,image/jpg,image/jpeg]|ext_in[gambar,png,jpg,gif,jpeg]|max_size[gambar,2048]',
-                'label' => 'Gambar'
-            ]
+        $kode = trim((string) $this->request->getPost('kodebarang'));
+        $gambar = $this->simpanGambar($file);
+        if ($gambar === null) {
+            return redirect()->to(site_url('barang/tambah'))->withInput();
+        }
+        $saved = $this->barang->insert([
+            'brgkode' => $kode,
+            'brgnama' => $nama,
+            'brgkatid' => $this->request->getPost('kategori'),
+            'brgsatid' => $this->request->getPost('satuan'),
+            'brgharga' => $this->request->getPost('harga'),
+            'brgstok' => $this->request->getPost('stok'),
+            'brggambar' => $gambar,
         ]);
-        if (!$valid) {
-            $sess_Pesan = [
-                'error' => '<div class="alert alert-danger alert-dismissible">
-                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                <h5><i class="icon fas fa-ban"></i> Error!</h5>
-                ' . $validation->listErrors() . '
-                </div>'
-            ];
-            session()->setFlashdata($sess_Pesan);
-            return redirect()->to('/barang/tambah');
-        } else {
-            //cek ada input gambar atau tidak
-            $gambar = $_FILES['gambar']['name'];
 
-            if ($gambar != NULL) {
-                //set nama file gambar
-                $namaFileGambar = $kodebarang;
-                $fileGambar = $this->request->getFile('gambar');
-                //pindahkan gambar ke folder assets/upload
-                $fileGambar->move('assets/img', $namaFileGambar . '.' . $fileGambar->getExtension());
-                $pathGambar = 'assets/img/' . $fileGambar->getName();
-            } else {
-                $pathGambar = '';
+        if ($saved === false) {
+            if ($gambar !== '') {
+                $this->hapusGambar($gambar);
             }
-            //insert semua input ke database
-            $this->barang->insert([
-                'brgkode' => $kodebarang,
-                'brgnama' => $namabarang,
-                'brgkatid' => $kategori,
-                'brgsatid' => $satuan,
-                'brgharga' => $harga,
-                'brgstok' => $stok,
-                'brggambar' => $pathGambar
-            ]);
-
-            //notif upload berhasil
-            $pesan_sukses = [
-                'sukses' => '<div class="alert alert-success alert-dismissible">
-                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">x</button>
-                <h5><i class="icon fas fa-check"></i> Berhasil !</h5>
-                Data barang dengan kode <strong>' . $kodebarang . '</strong> Berhasil disimpan
-                </div>'
-            ];
-
-            session()->setFlashdata($pesan_sukses);
-            return redirect()->to('/barang/tambah');
+            session()->setFlashdata('error', 'Data barang gagal disimpan.');
+            return redirect()->to(site_url('barang/tambah'))->withInput();
         }
+
+        session()->setFlashdata('sukses', 'Data barang berhasil disimpan.');
+        return redirect()->to(site_url('barang/index'));
     }
 
-    //fungsi edit barang
-    public function edit($kode)
+    public function edit(string $kode)
     {
-        $cekData = $this->barang->find($kode);
-        if ($cekData) {
-            //dropdown option for Satuan & Kategori
-            $modelkategori = new Modelkategori();
-            $modelsatuan = new Modelsatuan();
-
-            $data = [
-                'kodebarang' => $cekData['brgkode'],
-                'namabarang' => $cekData['brgnama'],
-                'kategori' => $cekData['brgkatid'],
-                'satuan' => $cekData['brgsatid'],
-                'harga' => $cekData['brgharga'],
-                'stok' => $cekData['brgstok'],
-                'gambar' => $cekData['brggambar'],
-                'datakategori' => $modelkategori->findAll(),
-                'datasatuan' => $modelsatuan->findAll(),
-            ];
-            return view('barang/formedit', $data);
-        } else {
-            $pesan_error = [
-                'error' => '<div class="alert alert-danger alert-dismissible">
-                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">x</button>
-                <h5><i class="icon fas fa-ban"></i> Error !</h5>
-                Data Barang Tidak Ditemukan !
-                </div>'
-            ];
-
-            session()->setFlashdata($pesan_error);
-            return redirect()->to('/barang/index');
+        $barang = $this->barang->find($kode);
+        if (! $barang) {
+            throw PageNotFoundException::forPageNotFound('Barang tidak ditemukan.');
         }
+
+        return view('barang/formedit', array_merge($this->dataPilihan(), [
+            'kodebarang' => $barang['brgkode'],
+            'namabarang' => $barang['brgnama'],
+            'kategori' => $barang['brgkatid'],
+            'satuan' => $barang['brgsatid'],
+            'harga' => $barang['brgharga'],
+            'stok' => $barang['brgstok'],
+            'gambar' => $barang['brggambar'] ?? '',
+        ]));
     }
 
-    //fungsi update/edit barang
     public function updatedata()
     {
-        $kodebarang = $this->request->getVar('kodebarang');
-        $namabarang = $this->request->getVar('namabarang');
-        $kategori = $this->request->getVar('kategori');
-        $satuan = $this->request->getVar('satuan');
-        $harga = $this->request->getVar('harga');
-        $stok = $this->request->getVar('stok');
+        $kodeInput = $this->request->getPost('kodebarang');
+        if (! is_string($kodeInput)) {
+            session()->setFlashdata('error', 'Kode barang tidak valid.');
+            return redirect()->to(site_url('barang/index'));
+        }
+        $kode = trim($kodeInput);
+        $barang = $this->barang->find($kode);
+        if (! $barang) {
+            throw PageNotFoundException::forPageNotFound('Barang tidak ditemukan.');
+        }
 
-        //validasi data input
-        $validation = \Config\Services::validation();
-        $valid = $this->validate([
-            'namabarang' => [
-                'rules' => 'required',
-                'label' => 'Nama Barang',
-                'errors' => [
-                    'required' => '{field} tidak boleh kosong.'
-                ]
-            ],
-            'kategori' => [
-                'rules' => 'required',
-                'label' => 'Kategori',
-                'errors' => [
-                    'required' => '{field} tidak boleh kosong.'
-                ]
-            ],
-            'satuan' => [
-                'rules' => 'required',
-                'label' => 'Satuan',
-                'errors' => [
-                    'required' => '{field} tidak boleh kosong.'
-                ]
-            ],
-            'harga' => [
-                'rules' => 'required|numeric',
-                'label' => 'Harga',
-                'errors' => [
-                    'required' => '{field} tidak boleh kosong.',
-                    'numeric' => '{field} hanya boleh angka'
-                ]
-            ],
-            'stok' => [
-                'rules' => 'required|numeric',
-                'label' => 'Stok',
-                'errors' => [
-                    'required' => '{field} tidak boleh kosong.',
-                    'numeric' => '{field} hanya boleh angka'
-                ]
-            ],
-            'gambar' => [
-                'rules' => 'mime_in[gambar,image/png,image/jpg,image/jpeg]|ext_in[gambar,png,jpg,gif,jpeg]|max_size[gambar,2048]',
-                'label' => 'Gambar'
-            ]
+        $file = $this->request->getFile('gambar');
+        if (! $this->validasiBarang(false, $file)) {
+            return redirect()->to(site_url('barang/edit/' . rawurlencode($kode)))->withInput();
+        }
+        $nama = trim((string) $this->request->getPost('namabarang'));
+        if ($nama === '') {
+            session()->setFlashdata('error', 'Nama barang wajib diisi.');
+            return redirect()->to(site_url('barang/edit/' . rawurlencode($kode)))->withInput();
+        }
+
+        $gambarBaru = $this->simpanGambar($file);
+        if ($gambarBaru === null) {
+            return redirect()->to(site_url('barang/edit/' . rawurlencode($kode)))->withInput();
+        }
+        $gambarLama = (string) ($barang['brggambar'] ?? '');
+        $gambar = $gambarBaru !== '' ? $gambarBaru : $gambarLama;
+        $updated = $this->barang->update($kode, [
+            'brgnama' => $nama,
+            'brgkatid' => $this->request->getPost('kategori'),
+            'brgsatid' => $this->request->getPost('satuan'),
+            'brgharga' => $this->request->getPost('harga'),
+            'brggambar' => $gambar,
         ]);
-        if (!$valid) {
-            $sess_Pesan = [
-                'error' => '<div class="alert alert-danger alert-dismissible">
-                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                <h5><i class="icon fas fa-ban"></i> Error!</h5>
-                ' . $validation->listErrors() . '
-                </div>'
-            ];
-            session()->setFlashdata($sess_Pesan);
-            return redirect()->to('/barang/tambah');
-        } else {
-            //cek sebelum edit ada gambar atau tidak jika ada gambar lama akan dihapus
-            $cekData = $this->barang->find($kodebarang);
-            $pathGambarLama = $cekData['brggambar'];
-            //cek ada input gambar atau tidak
-            $gambar = $_FILES['gambar']['name'];
 
-            if ($gambar != NULL) {
-                //hapus gambar lama jika ada
-                ($pathGambarLama == '' || $pathGambarLama == null) ? '' :
-                    unlink($pathGambarLama);
-
-                //set nama file gambar
-                $namaFileGambar = $kodebarang;
-                $fileGambar = $this->request->getFile('gambar');
-                //pindahkan gambar ke folder assets/upload
-                $fileGambar->move('assets/img', $namaFileGambar . '.' . $fileGambar->getExtension());
-                $pathGambar = 'assets/img/' . $fileGambar->getName();
-            } else {
-                $pathGambar = $pathGambarLama;
+        if ($updated === false) {
+            if ($gambarBaru !== '') {
+                $this->hapusGambar($gambarBaru);
             }
-            //insert semua input ke database
-            $this->barang->update($kodebarang, [
-                'brgnama' => $namabarang,
-                'brgkatid' => $kategori,
-                'brgsatid' => $satuan,
-                'brgharga' => $harga,
-                'brgstok' => $stok,
-                'brggambar' => $pathGambar
-            ]);
+            session()->setFlashdata('error', 'Data barang gagal diperbarui.');
+            return redirect()->to(site_url('barang/edit/' . rawurlencode($kode)))->withInput();
+        }
 
-            //notif upload berhasil
-            $pesan_sukses = [
-                'sukses' => '<div class="alert alert-success alert-dismissible">
-                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">x</button>
-                <h5><i class="icon fas fa-check"></i> Berhasil !</h5>
-                Data barang dengan kode <strong>' . $kodebarang . '</strong> Berhasil diupdate
-                </div>'
-            ];
+        if ($gambarBaru !== '' && $gambarLama !== '') {
+            $this->hapusGambar($gambarLama);
+        }
 
-            session()->setFlashdata($pesan_sukses);
-            return redirect()->to('/barang/index');
+        session()->setFlashdata('sukses', 'Data barang berhasil diperbarui.');
+        return redirect()->to(site_url('barang/index'));
+    }
+
+    public function hapus(string $kode)
+    {
+        $barang = $this->barang->find($kode);
+        if (! $barang) {
+            session()->setFlashdata('error', 'Barang tidak ditemukan.');
+            return redirect()->to(site_url('barang/index'));
+        }
+        if (db_connect()->table('transaksi_detail')->where('barang_kode', $kode)->countAllResults() > 0) {
+            session()->setFlashdata('error', 'Barang tidak dapat dihapus karena sudah tercatat dalam transaksi.');
+            return redirect()->to(site_url('barang/index'));
+        }
+
+        if (! $this->barang->delete($kode)) {
+            session()->setFlashdata('error', 'Barang gagal dihapus karena masih digunakan atau terjadi kesalahan.');
+            return redirect()->to(site_url('barang/index'));
+        }
+
+        if (! empty($barang['brggambar'])) {
+            $this->hapusGambar($barang['brggambar']);
+        }
+
+        session()->setFlashdata('sukses', 'Data barang berhasil dihapus.');
+        return redirect()->to(site_url('barang/index'));
+    }
+
+    public function gambar(string $kode)
+    {
+        $barang = $this->barang->find($kode);
+        if (! $barang || empty($barang['brggambar'])) {
+            throw PageNotFoundException::forPageNotFound('Gambar tidak ditemukan.');
+        }
+
+        $path = $this->pathGambar($barang['brggambar']);
+        if ($path === null) {
+            throw PageNotFoundException::forPageNotFound('Gambar tidak ditemukan.');
+        }
+
+        $mime = mime_content_type($path);
+        if (! in_array($mime, ['image/jpeg', 'image/png'], true)) {
+            throw PageNotFoundException::forPageNotFound('Format gambar tidak valid.');
+        }
+
+        return $this->response
+            ->setHeader('X-Content-Type-Options', 'nosniff')
+            ->setContentType($mime)
+            ->setBody(file_get_contents($path));
+    }
+
+    private function dataPilihan(): array
+    {
+        return [
+            'datakategori' => (new Modelkategori())->findAll(),
+            'datasatuan' => (new Modelsatuan())->findAll(),
+        ];
+    }
+
+    private function nomorHalaman($input): int
+    {
+        $halaman = is_scalar($input) ? filter_var($input, FILTER_VALIDATE_INT) : false;
+        return max(1, $halaman === false ? 1 : $halaman);
+    }
+
+    private function validasiBarang(bool $perluKode, ?UploadedFile $file): bool
+    {
+        foreach (['namabarang', 'kategori', 'satuan', 'harga', 'stok'] as $field) {
+            $value = $this->request->getPost($field);
+            if ($value !== null && ! is_scalar($value)) {
+                session()->setFlashdata('error', 'Data yang dikirim tidak valid.');
+                return false;
+            }
+        }
+        if ($perluKode) {
+            $value = $this->request->getPost('kodebarang');
+            if ($value !== null && ! is_string($value)) {
+                session()->setFlashdata('error', 'Kode barang tidak valid.');
+                return false;
+            }
+        }
+
+        $rules = [
+            'namabarang' => 'required|max_length[100]',
+            'kategori' => 'required|is_not_unique[kategori.katid]',
+            'satuan' => 'required|is_not_unique[satuan.satid]',
+            'harga' => 'required|decimal|greater_than_equal_to[0]|less_than_equal_to[9999999999.99]',
+        ];
+        if ($perluKode) {
+            $rules['kodebarang'] = 'required|alpha_numeric|max_length[10]|is_unique[barang.brgkode]';
+            $rules['stok'] = 'required|integer|greater_than_equal_to[0]|less_than_equal_to[4294967295]';
+        }
+        if ($file !== null && $file->getError() !== UPLOAD_ERR_NO_FILE) {
+            if (! $file->isValid()) {
+                session()->setFlashdata('error', 'File gambar gagal diunggah.');
+                return false;
+            }
+            $rules['gambar'] = 'mime_in[gambar,image/png,image/jpeg]|ext_in[gambar,png,jpg,jpeg]|max_size[gambar,2048]';
+        }
+
+        if ($this->validate($rules)) {
+            return true;
+        }
+
+        session()->setFlashdata('error', implode(' ', $this->validator->getErrors()));
+        return false;
+    }
+
+    private function simpanGambar(?UploadedFile $file): ?string
+    {
+        if ($file === null || $file->getError() === UPLOAD_ERR_NO_FILE) {
+            return '';
+        }
+
+        $directory = WRITEPATH . 'uploads' . DIRECTORY_SEPARATOR . 'barang';
+        if (! is_dir($directory) && ! mkdir($directory, 0750, true) && ! is_dir($directory)) {
+            throw new \RuntimeException('Direktori penyimpanan gambar tidak dapat dibuat.');
+        }
+
+        $extension = $file->guessExtension();
+        if (! in_array($extension, ['jpg', 'jpeg', 'png'], true)) {
+            session()->setFlashdata('error', 'Format gambar harus JPG atau PNG.');
+            return null;
+        }
+
+        $filename = bin2hex(random_bytes(16)) . '.' . $extension;
+        $file->move($directory, $filename, true);
+
+        return $filename;
+    }
+
+    private function hapusGambar(string $filename): void
+    {
+        $path = $this->pathGambar($filename);
+        if ($path === null) {
+            return;
+        }
+        if (is_file($path) && ! unlink($path)) {
+            log_message('error', 'Gagal menghapus file gambar barang: {file}', ['file' => $path]);
         }
     }
 
-    //fungsi hapus data
-    public function hapus($kode)
+    private function pathGambar(string $storedPath): ?string
     {
-        $cekData = $this->barang->find($kode);
-        if ($cekData) {
-            //hapus file gambar di direktori
-            $pathGambarLama = $cekData['brggambar'];
-            ($pathGambarLama == '' || $pathGambarLama == null) ? '' :
-                unlink($pathGambarLama);
-            $this->barang->delete($kode);
-            $pesan_sukses = [
-                'sukses' => '<div class="alert alert-success alert-dismissible">
-                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">x</button>
-                <h5><i class="icon fas fa-check"></i> Berhasil !</h5>
-                Data barang dengan kode <strong>' . $kode . '</strong> Berhasil dihapus
-                </div>'
-            ];
-            session()->setFlashdata($pesan_sukses);
-            return redirect()->to('/barang/index');
-        } else {
-            $pesan_error = [
-                'error' => '<div class="alert alert-danger alert-dismissible">
-                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">x</button>
-                <h5><i class="icon fas fa-ban"></i> Error !</h5>
-                Data Barang Tidak Ditemukan !
-                </div>'
-            ];
-            session()->setFlashdata($pesan_error);
-            return redirect()->to('/barang/index');
+        $filename = basename($storedPath);
+        $uploadPath = WRITEPATH . 'uploads' . DIRECTORY_SEPARATOR . 'barang' . DIRECTORY_SEPARATOR . $filename;
+        if (is_file($uploadPath)) {
+            return $uploadPath;
         }
+
+        if (strpos($storedPath, 'assets/img/') === 0) {
+            $legacyPath = ROOTPATH . 'assets' . DIRECTORY_SEPARATOR . 'img' . DIRECTORY_SEPARATOR . $filename;
+            if (is_file($legacyPath)) {
+                return $legacyPath;
+            }
+        }
+
+        return null;
     }
 }
